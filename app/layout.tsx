@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Epilogue } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+import { Providers } from "./providers";
+import { useTheme } from "next-themes";
+
+const epilogue = Epilogue({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,12 +14,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  console.log(children);
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      // data-dark-mode={theme === "dark" ? "true" : "false"}
+    >
+      <body
+        className={` relative h-screen overflow-hidden bg-light text-dark dark:bg-dark-2 dark:text-light ${
+          process.env.NODE_ENV == "development" ? "debug-screens" : ""
+        }`}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
