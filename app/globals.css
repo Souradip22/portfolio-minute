@@ -2,27 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --system-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
-  --primary: #4711de;
-  --ui-green: #28c840;
-  --ui-red: #ff5f57;
-  --ui-yellow: #febc2e;
-  --ui-light: #f8f2fb;
-  --gray-l: #cbcbcb;
-  --gray-m: #878787;
-  --gray-md: #585a51;
-  --gray-d: #414339;
-  --text: #333;
-  --text-d: #333;
-  --purple-ll: #f6f2ff;
-  --purple-l: #ece3ff;
-  --purple-lm: #deceff;
-  --purple-m: #7335d7;
-  --purple-d: #6500bf;
-  --orange: #fcaa5e;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 229.286, 0.935, 0.469;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 } */
 
 html {
@@ -160,6 +210,23 @@ html.dark {
   animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 /* 
-.bg-primary {
-  background-color: blue;
-} */
+  .bg-primary {
+    background-color: blue;
+  } */
+/*  primary: "#4711de",
+        "ui-green": "#28c840",
+        "ui-red": "#ff5f57",
+        "ui-yellow": "#febc2e",
+        "ui-light": "#f8f2fb",
+        "gray-l": "#cbcbcb",
+        "gray-m": "#878787",
+        "gray-md": "#585a51",
+        "gray-d": "#414339",
+        text: "#333",
+        "text-d": "#333",
+        "purple-ll": "#f6f2ff",
+        "purple-l": "#ece3ff",
+        "purple-lm": "#deceff",
+        "purple-m": "#7335d7",
+        "purple-d": "#6500bf",
+        orange: "#fcaa5e", */
