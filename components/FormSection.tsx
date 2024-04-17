@@ -19,12 +19,15 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Toast } from "@/components/ui/toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import {
@@ -46,22 +49,75 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "./ui/label";
 import { IoClose } from "react-icons/io5";
+import { FaRegEdit } from "react-icons/fa";
+import { formDefaultValues } from "@/lib/defaultValues";
 
-const OPTIONS: Option[] = [
-  { label: "nextjs", value: "Nextjs" },
-  { label: "React", value: "react" },
-  { label: "Remix", value: "remix" },
-  { label: "Vite", value: "vite" },
-  { label: "Nuxt", value: "nuxt" },
-  { label: "Vue", value: "vue" },
-  { label: "Svelte", value: "svelte" },
-  { label: "Angular", value: "angular" },
-  { label: "Ember", value: "ember" },
-  { label: "Gatsby", value: "gatsby" },
-  { label: "Astro", value: "astro" },
+const filenames = [
+  "nodejs",
+  "typescript",
+  "nextjs",
+  "reactjs",
+  "mongodb",
+  "tailwindcss",
+  "css",
+  "redux",
+  "figma",
+  "python",
+  "sql",
+  "machine_learning",
+  "django",
+  "java",
+  "cpp",
+  "kafka",
+  "golang",
+  "html",
+  "redis",
+  "docker",
+  "cassandra",
+  "react_native",
+  "angular",
+  "vuejs",
+  "flutter",
+  "swift",
+  "kotlin",
+  "php",
+  "ruby",
+  "perl",
+  "csharp",
+  "visual_studio",
+  "intellij_idea",
+  "vs_code",
+  "sublime_text",
+  "atom",
+  "android_studio",
+  "xcode",
+  "netbeans",
+  "eclipse",
+  "mysql",
+  "postgresql",
+  "sqlite",
+  "oracle",
+  "firebase",
+  "heroku",
+  "git",
+  "github",
+  "bitbucket",
+  "dockerhub",
+  "kubernetes",
+  "aws",
+  "google_cloud",
+  "linux",
 ];
 
-const profileFormSchema = z.object({
+const skillOptions: Option[] = filenames.map((filename) => ({
+  label: filename
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" "), // Capitalize each word in the label
+  value: filename, // Use the filename as the value
+}));
+
+export const profileFormSchema = z.object({
   shortname: z
     .string()
     .min(2, {
@@ -70,7 +126,7 @@ const profileFormSchema = z.object({
     .max(10, {
       message: "Short name must not be longer than 10 characters.",
     }),
-  fullname: z
+  fullName: z
     .string()
     .min(2, {
       message: "Full name must be at least 2 characters.",
@@ -86,6 +142,9 @@ const profileFormSchema = z.object({
     .max(200, {
       message: "Profile description cannot be longer than 200 characters.",
     }),
+  experience: z.string().min(0).max(90).optional(),
+  completedProjects: z.string().min(0).max(1000).optional(),
+  isOpenToWork: z.boolean().default(true).optional(),
   email: z
     .string()
     .email({ message: "Please enter a valid email." })
@@ -126,42 +185,24 @@ const profileFormSchema = z.object({
       })
     )
     .optional(),
+  educationWithExperiences: z
+    .array(
+      z.object({
+        orgName: z.string().optional(),
+        fromDate: z.string().optional(),
+        toDate: z.string().optional(),
+        type: z.enum(["school", "company"]).optional(), //either school or company
+        designation: z.string().optional(),
+        location: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 // This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  shortname: "Souradip",
-  fullname: "Souradip Chandra",
-  bio: "I own a computer.",
-  email: "souradip000@gmail.com",
-  phone: "+91 7318757426",
-  urls: [
-    { value: "https://shadcn.com", label: "Leetcode" },
-    { value: "http://twitter.com/shadcn", label: "Twitter" },
-  ],
-  skills: [
-    { label: "nextjs", value: "Nextjs" },
-    { label: "React", value: "react" },
-  ],
-  projects: [
-    {
-      projectName: "Project 1",
-      projectDescription:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, exercitationem.",
-      repositoryUrl: "https://shadcn.com",
-      demoUrl: "http://twitter.com/shadcn",
-    },
-    {
-      projectName: "Project 2",
-      projectDescription:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, exercitationem.",
-      repositoryUrl: "https://shadcn.com",
-      demoUrl: "http://twitter.com/shadcn",
-    },
-  ],
-};
+const defaultValues: Partial<ProfileFormValues> = formDefaultValues;
 
 export default function FormSection({
   formValues,
@@ -175,7 +216,7 @@ export default function FormSection({
     defaultValues,
     mode: "onChange",
   });
-  const { watch } = form;
+  const { watch, getValues } = form;
   const {
     fields: urlsField,
     append: appendUrl,
@@ -198,40 +239,65 @@ export default function FormSection({
     fields: projectFields,
     append: appendProject,
     remove: removeProject,
+    update: updateProject,
   } = useFieldArray({
     name: "projects",
+    control: form.control,
+  });
+
+  const {
+    fields: eduExpFields,
+    append: appendEduExp,
+    update: updateEduExp,
+    remove: removeEduExp,
+  } = useFieldArray({
+    name: "educationWithExperiences",
     control: form.control,
   });
 
   // Watch the form fields
   // Watch the form fields
   const shortnameValue = watch("shortname");
-  const fullnameValue = watch("fullname");
+  const fullNameValue = watch("fullName");
   const bioValue = watch("bio");
   const phoneValue = watch("phone");
   const emailValue = watch("email");
   const skillsValue = watch("skills");
   const projectsValue = watch("projects");
 
+  const openToWorkValue = watch("isOpenToWork");
+  const expValue = watch("experience");
+  const completedProjectsValue = watch("completedProjects");
+
+  const eduExpValues = watch("educationWithExperiences");
+
   // Log the value of shortnameValue to the console whenever it changes
   useEffect(() => {
     updateFormValues({
       shortname: shortnameValue,
-      fullname: fullnameValue,
+      fullName: fullNameValue,
       bio: bioValue,
       phone: phoneValue,
       email: emailValue,
       skills: skillsValue,
       projects: projectsValue,
+      openToWork: openToWorkValue,
+      experience: expValue,
+      completedProjects: completedProjectsValue,
+      eduExpValues: eduExpValues,
     });
   }, [
     shortnameValue,
-    fullnameValue,
+    fullNameValue,
     bioValue,
     phoneValue,
     emailValue,
     skillsValue,
     projectsValue,
+    openToWorkValue,
+    expValue,
+    completedProjectsValue,
+    eduExpValues,
   ]);
 
   function onSubmit(data: any) {
@@ -274,7 +340,7 @@ export default function FormSection({
                 />
                 <FormField
                   control={form.control}
-                  name="fullname"
+                  name="fullName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Full name</FormLabel>
@@ -329,6 +395,52 @@ export default function FormSection({
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="experience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Experience</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Years of experience" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="completedProjects"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Projects count</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Completed projects count"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="isOpenToWork"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Show Available badge</FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="skills">
@@ -339,7 +451,7 @@ export default function FormSection({
                   name="skills"
                   render={({ field }) => (
                     <MultipleSelector
-                      defaultOptions={OPTIONS}
+                      defaultOptions={skillOptions}
                       placeholder="add your skills"
                       creatable
                       emptyIndicator={
@@ -355,7 +467,7 @@ export default function FormSection({
                 />
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="additonalLinks">
+            <AccordionItem value="aditonalLinks">
               <AccordionTrigger>Additional Links</AccordionTrigger>
               <AccordionContent>
                 <div>
@@ -406,10 +518,18 @@ export default function FormSection({
                         name={`projects.${index}.projectName`}
                         render={({ field }) => (
                           <div className="inline-block w-full">
-                            <p className="bg-purple-400 mb-1 text-white text-sm   py-3 px-5 uppercase rounded flex justify-between items-center gap-2.5">
+                            <p className="bg-purple-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
                               {/*  */}
                               {field.value}
-                              <span>
+
+                              <span className="flex items-center justify-end gap-1">
+                                <AddEditProjectDialog
+                                  onAddProject={appendProject}
+                                  passedValues={getValues(`projects.${index}`)}
+                                  action="edit"
+                                  index={index}
+                                  onEditProject={updateProject}
+                                />
                                 <IoClose
                                   className="w-4 h-4 cursor-pointer"
                                   onClick={() => removeProject(index)}
@@ -423,7 +543,55 @@ export default function FormSection({
                   ))}
                 </div>
                 {/* DialogDemo component */}
-                <DialogDemo onAddProject={appendProject} />
+                <AddEditProjectDialog onAddProject={appendProject} />
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="educationWithExperiences">
+              <AccordionTrigger>Education and experience</AccordionTrigger>
+              <AccordionContent>
+                <div>
+                  {eduExpFields.map((field: any, index: number) => (
+                    <div key={field.id}>
+                      <FormField
+                        control={form.control}
+                        name={`educationWithExperiences.${index}.orgName`}
+                        render={({ field }) => (
+                          <div className="inline-block w-full">
+                            <p className="bg-amber-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
+                              {field.value} (
+                              {getValues(
+                                `educationWithExperiences.${index}.fromDate`
+                              )}
+                              -
+                              {getValues(
+                                `educationWithExperiences.${index}.toDate`
+                              )}
+                              )
+                              <span className="flex items-center justify-end gap-1">
+                                <AddEduExpDialog
+                                  onAddItem={appendEduExp}
+                                  passedValues={getValues(
+                                    `educationWithExperiences.${index}`
+                                  )}
+                                  action="edit"
+                                  index={index}
+                                  onEditItem={updateEduExp}
+                                />
+                                <IoClose
+                                  className="w-4 h-4 cursor-pointer"
+                                  onClick={() => removeEduExp(index)}
+                                />
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* DialogDemo component */}
+                <AddEduExpDialog onAddItem={appendEduExp} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -436,7 +604,19 @@ export default function FormSection({
   );
 }
 
-export function DialogDemo({ onAddProject }: { onAddProject: any }) {
+export function AddEditProjectDialog({
+  onAddProject,
+  passedValues,
+  action,
+  index,
+  onEditProject,
+}: {
+  onAddProject: any;
+  passedValues?: any;
+  action?: any;
+  index?: any;
+  onEditProject?: any;
+}) {
   const [open, setOpen] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -445,7 +625,12 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
     formData.forEach((value, key) => {
       formValues[key] = value;
     });
-    onAddProject(formValues);
+    if (action == "edit") {
+      onEditProject(index, formValues);
+    } else {
+      onAddProject(formValues);
+    }
+
     setOpen(false);
     e.stopPropagation();
   };
@@ -453,7 +638,11 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Project</Button>
+        {action == "edit" ? (
+          <FaRegEdit className="w-3 h-3 cursor-pointer" />
+        ) : (
+          <Button variant="outline">Add Project</Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit}>
@@ -468,6 +657,7 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
                 name="projectName"
                 placeholder="Project Name"
                 className="col-span-3"
+                defaultValue={passedValues?.projectName}
               />
             </div>
             <div className="grid grid-cols-2 items-center gap-2">
@@ -476,6 +666,7 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
                 name="projectDescription"
                 placeholder="Project Description"
                 className="col-span-3 resize-zone"
+                defaultValue={passedValues?.projectDescription}
               />
             </div>
             <div className="grid grid-cols-2 items-center gap-2">
@@ -484,6 +675,7 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
                 name="repositoryUrl"
                 placeholder="Repository URL"
                 className="col-span-3"
+                defaultValue={passedValues?.repositoryUrl}
               />
             </div>
             <div className="grid grid-cols-2 items-center gap-2">
@@ -492,7 +684,152 @@ export function DialogDemo({ onAddProject }: { onAddProject: any }) {
                 name="demoUrl"
                 placeholder="Demo URL"
                 className="col-span-3"
+                defaultValue={passedValues?.demoUrl}
               />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
+            <Button type="submit" variant={"destructive"}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function AddEduExpDialog({
+  onAddItem,
+  passedValues,
+  action,
+  index,
+  onEditItem,
+}: {
+  onAddItem: any;
+  passedValues?: any;
+  action?: any;
+  index?: any;
+  onEditItem?: any;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const formValues: any = {};
+    formData.forEach((value, key) => {
+      formValues[key] = value;
+    });
+    if (action == "edit") {
+      onEditItem(index, formValues);
+    } else {
+      onAddItem(formValues);
+    }
+
+    setOpen(false);
+    e.stopPropagation();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {action == "edit" ? (
+          <FaRegEdit className="w-3 h-3 cursor-pointer" />
+        ) : (
+          <Button variant="outline">Add details</Button>
+        )}
+      </DialogTrigger>
+      <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogDescription>
+              {action == "edit" ? "Edit details:" : "Enter details:"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 items-center gap-2">
+              <Input
+                id="orgName"
+                name="orgName"
+                placeholder="University or organization Name"
+                className="col-span-3"
+                defaultValue={passedValues?.orgName}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-center gap-2">
+              <Select name="fromDate" defaultValue={passedValues?.fromDate}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a from date  " />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Array.from(
+                      { length: new Date().getFullYear() + 1 - 1970 },
+                      (_, index) => (
+                        <SelectItem key={index} value={`${index + 1970}`}>
+                          {index + 1970}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select name="toDate" defaultValue={passedValues?.toDate}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a to date  " />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Array.from(
+                      { length: new Date().getFullYear() + 1 - 1970 },
+                      (_, index) => (
+                        <SelectItem key={index} value={`${index + 1970}`}>
+                          {index + 1970}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 items-center gap-2">
+              <Input
+                id="location"
+                name="location"
+                placeholder="Location (e.g. Bangalore, India)"
+                className="col-span-3"
+                defaultValue={passedValues?.location}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-center gap-2">
+              <Input
+                id="designation"
+                name="designation"
+                placeholder="Designation (e.g. Student, Software Engineer)"
+                className="col-span-3"
+                defaultValue={passedValues?.designation}
+              />
+            </div>
+            <div className="className">
+              <Select name="type" defaultValue={passedValues?.type}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="school">Education</SelectItem>
+                    <SelectItem value="company">
+                      Professional Experience
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>

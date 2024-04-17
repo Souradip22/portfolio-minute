@@ -2,17 +2,23 @@
 import DomainPage from "@/app/domain/page";
 import React, { useState } from "react";
 import FormSection from "./FormSection";
+import { formDefaultValues } from "@/lib/defaultValues";
 
 export default function EditorSection() {
   const [formValues, setFormValues] = useState({
-    shortname: "",
-    fullname: "",
-    bio: "",
-    phone: "",
-    email: "",
-    skills: "",
-    projects: "",
+    shortname: formDefaultValues.shortname,
+    fullName: formDefaultValues.fullName,
+    bio: formDefaultValues.bio,
+    phone: formDefaultValues.phone,
+    email: formDefaultValues.email,
+    skills: formDefaultValues.skills,
+    projects: formDefaultValues.projects,
+    openToWork: formDefaultValues.isOpenToWork,
+    completedProjects: formDefaultValues.completedProjects,
+    experience: formDefaultValues.experience,
+    eduExpValue: formDefaultValues.educationWithExperiences, // Corrected key name
   });
+  console.log(formDefaultValues);
 
   // Function to update form field values
   const updateFormValues = (newValues: any) => {

@@ -211,8 +211,6 @@ const MultipleSelector = React.forwardRef<
 
     const handleUnselect = React.useCallback(
       (option: Option) => {
-        console.log(option);
-        // onUnselectFunc(option);
         const newOptions = selected.filter((s) => s.value !== option.value);
         setSelected(newOptions);
         onChange?.(newOptions);
@@ -476,7 +474,6 @@ const MultipleSelector = React.forwardRef<
                                 e.stopPropagation();
                               }}
                               onSelect={() => {
-                                console.log("items selected ", option);
                                 onSelectFunc(option);
                                 if (selected.length >= maxSelected) {
                                   onMaxSelected?.(selected.length);
