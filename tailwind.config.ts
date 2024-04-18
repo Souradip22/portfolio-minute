@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const colors = require("tailwindcss/colors");
 
 const config = {
   darkMode: ["class"],
@@ -20,6 +21,12 @@ const config = {
     extend: {
       colors: {
         primary: "#4711de",
+        amber: colors.amber,
+        emerald: colors.emerald,
+        lime: colors.lime,
+        pink: colors.pink,
+        indigo: colors.indigo,
+
         // "ui-green": "#28c840",
         // "ui-red": "#ff5f57",
         // "ui-yellow": "#febc2e",

@@ -1,6 +1,6 @@
 "use client";
 import DomainPage from "@/app/domain/page";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormSection from "./FormSection";
 import { formDefaultValues } from "@/lib/defaultValues";
 
@@ -17,8 +17,10 @@ export default function EditorSection() {
     completedProjects: formDefaultValues.completedProjects,
     experience: formDefaultValues.experience,
     eduExpValue: formDefaultValues.educationWithExperiences, // Corrected key name
+    socialLinks: formDefaultValues.socialLinks,
+    theme: formDefaultValues.theme,
+    font: formDefaultValues.font,
   });
-  console.log(formDefaultValues);
 
   // Function to update form field values
   const updateFormValues = (newValues: any) => {

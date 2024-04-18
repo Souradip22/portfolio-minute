@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Form,
   FormControl,
@@ -51,63 +52,19 @@ import { Label } from "./ui/label";
 import { IoClose } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 import { formDefaultValues } from "@/lib/defaultValues";
+import { skillNames } from "@/lib/constants";
 
-const filenames = [
-  "nodejs",
-  "typescript",
-  "nextjs",
-  "reactjs",
-  "mongodb",
-  "tailwindcss",
-  "css",
-  "redux",
-  "figma",
-  "python",
-  "sql",
-  "machine_learning",
-  "django",
-  "java",
-  "cpp",
-  "kafka",
-  "golang",
-  "html",
-  "redis",
-  "docker",
-  "cassandra",
-  "react_native",
-  "angular",
-  "vuejs",
-  "flutter",
-  "swift",
-  "kotlin",
-  "php",
-  "ruby",
-  "perl",
-  "csharp",
-  "visual_studio",
-  "intellij_idea",
-  "vs_code",
-  "sublime_text",
-  "atom",
-  "android_studio",
-  "xcode",
-  "netbeans",
-  "eclipse",
-  "mysql",
-  "postgresql",
-  "sqlite",
-  "oracle",
-  "firebase",
-  "heroku",
-  "git",
-  "github",
-  "bitbucket",
-  "dockerhub",
-  "kubernetes",
-  "aws",
-  "google_cloud",
-  "linux",
-];
+import { socialLinksSVGs } from "./social-links";
+import { CheckIcon } from "@radix-ui/react-icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { useTheme } from "next-themes";
+
+const filenames = skillNames;
 
 const skillOptions: Option[] = filenames.map((filename) => ({
   label: filename
@@ -118,6 +75,8 @@ const skillOptions: Option[] = filenames.map((filename) => ({
 }));
 
 export const profileFormSchema = z.object({
+  font: z.enum(["font_1", "font_2", "font_3"]).optional(),
+  theme: z.enum(["purple", "amber", "lime", "indigo", "pink"]).optional(),
   shortname: z
     .string()
     .min(2, {
@@ -156,7 +115,7 @@ export const profileFormSchema = z.object({
       message: "phone must be at least 2 characters.",
     })
     .max(14, {
-      message: "Username must not be longer than 10 characters.",
+      message: "Phone must not be longer than 14 characters.",
     })
     .optional(),
   skills: z
@@ -167,11 +126,11 @@ export const profileFormSchema = z.object({
       })
     )
     .optional(),
-  urls: z
+  socialLinks: z
     .array(
       z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-        label: z.string().min(2).max(10),
+        value: z.string().optional(),
+        label: z.string().min(2).max(10).optional(),
       })
     )
     .optional(),
@@ -217,14 +176,23 @@ export default function FormSection({
     mode: "onChange",
   });
   const { watch, getValues } = form;
-  const {
-    fields: urlsField,
-    append: appendUrl,
-    remove: removeUrl,
-  } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  });
+
+  // type ThemeColor =
+  //   | "purple"
+  //   | "amber"
+  //   | "lime"
+  //   | "indigo"
+  //   | "pink"
+  //   | string
+  //   | undefined;
+  // const [theme, setTheme] = useState<ThemeColor>(defaultValues.theme);
+
+  const { fields: socialLinksField, update: updateSocialLinks } = useFieldArray(
+    {
+      name: "socialLinks",
+      control: form.control,
+    }
+  );
 
   const {
     fields: skillsField,
@@ -270,7 +238,10 @@ export default function FormSection({
   const completedProjectsValue = watch("completedProjects");
 
   const eduExpValues = watch("educationWithExperiences");
+  const socialLinksValue = watch("socialLinks");
 
+  const themeValue = watch("theme");
+  const fontValue = watch("font");
   // Log the value of shortnameValue to the console whenever it changes
   useEffect(() => {
     updateFormValues({
@@ -285,6 +256,9 @@ export default function FormSection({
       experience: expValue,
       completedProjects: completedProjectsValue,
       eduExpValues: eduExpValues,
+      socialLinks: socialLinksValue,
+      theme: themeValue,
+      font: fontValue,
     });
   }, [
     shortnameValue,
@@ -298,6 +272,9 @@ export default function FormSection({
     expValue,
     completedProjectsValue,
     eduExpValues,
+    socialLinksValue,
+    themeValue,
+    fontValue,
   ]);
 
   function onSubmit(data: any) {
@@ -312,21 +289,98 @@ export default function FormSection({
     //   // ),
     // });
   }
-
+  const { resolvedTheme: mode } = useTheme();
   return (
-    <div className="bg-white p-4 w-[30%]">
+    <div className="bg-white p-4 w-[30%] overflow-y-scroll h-screen">
+      {/* <div className="hidden bg-purple-500 bg-indigo-500 bg-amber-500 bg-lime-500 bg-pink-500"></div> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Accordion type="single" collapsible>
-            <AccordionItem value="shortname">
+            <AccordionItem value="appearance">
+              <AccordionTrigger>Appearance</AccordionTrigger>
+              <AccordionContent>
+                <FormField
+                  control={form.control}
+                  name="theme"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Theme
+                      </FormLabel>
+
+                      <FormControl>
+                        <div className="flex flex-row mt-2 gap-4">
+                          {["purple", "amber", "lime", "indigo", "pink"].map(
+                            (color, index) => (
+                              <label
+                                key={index}
+                                className={`flex items-center gap-2 cursor-pointer`}
+                              >
+                                <input
+                                  type="radio"
+                                  {...field}
+                                  value={color}
+                                  checked={field.value === color}
+                                  onChange={() => field.onChange(color)}
+                                  className="sr-only"
+                                />
+                                <span
+                                  className={`h-6 w-6 rounded-full bg-${color}-500 border-2 border-transparent inline-block`}
+                                >
+                                  {field.value === color && (
+                                    <CheckIcon className="h-5 w-5 text-white items-center flex" />
+                                  )}
+                                </span>
+                              </label>
+                            )
+                          )}
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="font"
+                  render={({ field }) => (
+                    <FormItem className="hidden">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Font
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a font" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="font_1">Roboto</SelectItem>
+                          <SelectItem value="font_2">Sans</SelectItem>
+                          <SelectItem value="font_3">GoogleFont</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="about">
               <AccordionTrigger>About</AccordionTrigger>
               <AccordionContent>
                 <FormField
                   control={form.control}
                   name="shortname"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Short name</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Short name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="short name" {...field} />
                       </FormControl>
@@ -342,8 +396,10 @@ export default function FormSection({
                   control={form.control}
                   name="fullName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full name</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Full name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Full name" {...field} />
                       </FormControl>
@@ -355,8 +411,10 @@ export default function FormSection({
                   control={form.control}
                   name="bio"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bio</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Bio
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Tell us a little bit about yourself"
@@ -373,8 +431,10 @@ export default function FormSection({
                   control={form.control}
                   name="phone"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Phone
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Phone" {...field} />
                       </FormControl>
@@ -386,8 +446,10 @@ export default function FormSection({
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Email
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="email address" {...field} />
                       </FormControl>
@@ -399,8 +461,10 @@ export default function FormSection({
                   control={form.control}
                   name="experience"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Experience</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Experience
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Years of experience" {...field} />
                       </FormControl>
@@ -412,8 +476,10 @@ export default function FormSection({
                   control={form.control}
                   name="completedProjects"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Projects count</FormLabel>
+                    <FormItem className="mb-4">
+                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        Projects count
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Completed projects count"
@@ -436,13 +502,66 @@ export default function FormSection({
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>Show Available badge</FormLabel>
+                        <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                          Show Available badge
+                        </FormLabel>
                       </div>
                     </FormItem>
                   )}
                 />
               </AccordionContent>
             </AccordionItem>
+
+            <AccordionItem value="socialLinks">
+              <AccordionTrigger>Social Links</AccordionTrigger>
+              <AccordionContent>
+                <div>
+                  {socialLinksField.map((field, index) => (
+                    <div key={field.id}>
+                      <FormField
+                        control={form.control}
+                        name={`socialLinks.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem className="mb-4">
+                            <FormControl>
+                              <span className="flex items-center flex-row gap-2">
+                                <p>
+                                  {socialLinksSVGs &&
+                                    socialLinksSVGs[
+                                      // @ts-ignore
+                                      socialLinksField[index].label
+                                    ]}
+                                </p>
+
+                                <Input
+                                  {...field}
+                                  placeholder={`${socialLinksField[index].label} link`}
+                                  name="socialLinks"
+                                  onChange={(e) => {
+                                    updateSocialLinks(index, {
+                                      value: e.target.value,
+                                      label: socialLinksField[index].label,
+                                    });
+                                  }}
+                                />
+                              </span>
+                            </FormControl>
+                            {socialLinksField[index].label == "resume" && (
+                              <FormDescription>
+                                Fill this to get download resume button
+                              </FormDescription>
+                            )}
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
             <AccordionItem value="skills">
               <AccordionTrigger>Skills</AccordionTrigger>
               <AccordionContent>
@@ -452,7 +571,7 @@ export default function FormSection({
                   render={({ field }) => (
                     <MultipleSelector
                       defaultOptions={skillOptions}
-                      placeholder="add your skills"
+                      placeholder="add or create  skills"
                       creatable
                       emptyIndicator={
                         <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
@@ -465,85 +584,6 @@ export default function FormSection({
                     />
                   )}
                 />
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="aditonalLinks">
-              <AccordionTrigger>Additional Links</AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  {urlsField.map((field, index) => (
-                    <FormField
-                      control={form.control}
-                      key={field.id}
-                      name={`urls.${index}.value`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className={cn(index !== 0 && "sr-only")}>
-                            URLs
-                          </FormLabel>
-                          <FormDescription
-                            className={cn(index !== 0 && "sr-only")}
-                          >
-                            Add links to your website, blog, or social media
-                            profiles.
-                          </FormDescription>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => appendUrl({ value: "", label: "" })}
-                  >
-                    Add URL
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="projects">
-              <AccordionTrigger>Projects</AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  {projectFields.map((field: any, index: number) => (
-                    <div key={field.id}>
-                      <FormField
-                        control={form.control}
-                        name={`projects.${index}.projectName`}
-                        render={({ field }) => (
-                          <div className="inline-block w-full">
-                            <p className="bg-purple-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
-                              {/*  */}
-                              {field.value}
-
-                              <span className="flex items-center justify-end gap-1">
-                                <AddEditProjectDialog
-                                  onAddProject={appendProject}
-                                  passedValues={getValues(`projects.${index}`)}
-                                  action="edit"
-                                  index={index}
-                                  onEditProject={updateProject}
-                                />
-                                <IoClose
-                                  className="w-4 h-4 cursor-pointer"
-                                  onClick={() => removeProject(index)}
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  ))}
-                </div>
-                {/* DialogDemo component */}
-                <AddEditProjectDialog onAddProject={appendProject} />
               </AccordionContent>
             </AccordionItem>
 
@@ -594,6 +634,46 @@ export default function FormSection({
                 <AddEduExpDialog onAddItem={appendEduExp} />
               </AccordionContent>
             </AccordionItem>
+
+            <AccordionItem value="projects">
+              <AccordionTrigger>Projects</AccordionTrigger>
+              <AccordionContent>
+                <div>
+                  {projectFields.map((field: any, index: number) => (
+                    <div key={field.id}>
+                      <FormField
+                        control={form.control}
+                        name={`projects.${index}.projectName`}
+                        render={({ field }) => (
+                          <div className="inline-block w-full">
+                            <p className="bg-purple-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
+                              {/*  */}
+                              {field.value}
+
+                              <span className="flex items-center justify-end gap-1">
+                                <AddEditProjectDialog
+                                  onAddProject={appendProject}
+                                  passedValues={getValues(`projects.${index}`)}
+                                  action="edit"
+                                  index={index}
+                                  onEditProject={updateProject}
+                                />
+                                <IoClose
+                                  className="w-4 h-4 cursor-pointer"
+                                  onClick={() => removeProject(index)}
+                                />
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* DialogDemo component */}
+                <AddEditProjectDialog onAddProject={appendProject} />
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
           <Button type="submit" variant={"outline"}>
             Submit
@@ -641,7 +721,9 @@ export function AddEditProjectDialog({
         {action == "edit" ? (
           <FaRegEdit className="w-3 h-3 cursor-pointer" />
         ) : (
-          <Button variant="outline">Add Project</Button>
+          <button className="px-3 py-1 rounded-md bg-gray-500 text-gray-50 font-semibold text-xs">
+            Add project
+          </button>
         )}
       </DialogTrigger>
       <DialogContent>
@@ -742,7 +824,9 @@ export function AddEduExpDialog({
         {action == "edit" ? (
           <FaRegEdit className="w-3 h-3 cursor-pointer" />
         ) : (
-          <Button variant="outline">Add details</Button>
+          <button className="px-3 py-1 rounded-md bg-gray-500 text-gray-50 font-semibold text-xs">
+            Add details
+          </button>
         )}
       </DialogTrigger>
       <DialogContent>

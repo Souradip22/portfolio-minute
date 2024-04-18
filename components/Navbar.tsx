@@ -115,12 +115,12 @@ export default function Navbar() {
 
 function MobileNav({ closeSideMenu }: { closeSideMenu: () => void }) {
   return (
-    <div className="fixed left-0 top-0 flex h-full min-h-screen w-full justify-end bg-gray-900 bg-opacity-50 lg:hidden ">
-      <div className=" text-base font-medium transition-all rounded-l-lg  h-full w-[80%] md:w-[55%] bg-white dark:bg-gray-950 px-4 py-4 shadow-2xl shadow-blue-500/20">
+    <div className="fixed right-0 top-0 flex h-full min-h-screen w-full justify-start  bg-gray-900 bg-opacity-50 lg:hidden ">
+      <div className=" text-base font-medium transition-all rounded-r-lg  h-full w-[70%] sm:w-[30%] bg-white dark:bg-gray-950 px-4 py-4 shadow-2xl shadow-blue-500/20">
         <section className="flex justify-end dark:text-white">
           <AiOutlineClose
             onClick={closeSideMenu}
-            className="cursor-pointer text-3xl "
+            className="cursor-pointer text-2xl "
           />
         </section>
         <div className=" flex flex-col text-base  gap-2 ">

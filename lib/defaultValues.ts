@@ -3,6 +3,8 @@ import { z } from "zod";
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export const formDefaultValues: Partial<ProfileFormValues> = {
+  theme: "purple",
+  font: "font_1",
   shortname: "COOL",
   fullName: "Souradip Chandra",
   bio: "Versatile full-stack engineer proficient in both front-end and back-end development, adept at crafting seamless and intuitive user experiences. 💻🎨",
@@ -11,9 +13,20 @@ export const formDefaultValues: Partial<ProfileFormValues> = {
   isOpenToWork: true,
   email: "souradip000@gmail.com",
   phone: "+91 7318757426",
-  urls: [
-    { value: "https://shadcn.com", label: "Leetcode" },
-    { value: "http://twitter.com/shadcn", label: "Twitter" },
+  socialLinks: [
+    { value: "https://github.com/Souradip22", label: "github" },
+    { value: "https://leetcode.com/SOURADIP22/", label: "leetcode" },
+    { value: "https://resume.souradip.ch", label: "resume" },
+    { value: "https://www.souradip.ch/blogs", label: "blog" },
+    { value: "", label: "twitter" },
+    {
+      value: "https://www.linkedin.com/in/souradip-c-563962141/",
+      label: "linkedin",
+    },
+    { value: "", label: "youtube" },
+    { value: "", label: "behance" },
+    { value: "", label: "instagram" },
+    { value: "", label: "figma" },
   ],
   skills: [
     { label: "Nextjs", value: "nextjs" },
