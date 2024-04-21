@@ -237,52 +237,107 @@ export async function createProfile(
 
 export async function updateProfile(
   formData: ProfileFormData
-): Promise<TSProfileSchema | { error: string } | null> {
+): Promise<{ updatedProfile: TSProfileSchema | null; error: string | null }> {
+  let updatedProfile: TSProfileSchema | null = null;
+  const error: string | null = null;
+
   try {
-    // Create the profile
-    const updatedProfile = await prisma.profile.update({
-      where: {
-        id: formData.id,
-      },
-      data: {
-        font: formData.font,
-        theme: formData.theme,
-        shortname: formData.shortname,
-        fullName: formData.fullName,
-        bio: formData.bio,
-        experience: formData.experience,
-        completedProjects: formData.completedProjects,
-        isOpenToWork: formData.isOpenToWork,
-        email: formData.email,
-        phone: formData.phone,
-        skills: {
-          createMany: {
-            data: formData.skills!,
+    // Start a transaction to ensure atomicity
+    await prisma.$transaction(async (tx) => {
+      // Delete all existing data associated with the profile ID
+      await tx.skill.deleteMany({
+        where: {
+          profileId: formData.id,
+        },
+      });
+
+      await tx.socialLink.deleteMany({
+        where: {
+          profileId: formData.id,
+        },
+      });
+
+      await tx.project.deleteMany({
+        where: {
+          profileId: formData.id,
+        },
+      });
+
+      await tx.educationWithExperience.deleteMany({
+        where: {
+          profileId: formData.id,
+        },
+      });
+
+      // Create new data for the profile
+      // @ts-ignore
+      updatedProfile = await tx.profile.update({
+        where: {
+          id: formData.id,
+        },
+        data: {
+          font: formData.font,
+          theme: formData.theme,
+          shortname: formData.shortname,
+          fullName: formData.fullName,
+          bio: formData.bio,
+          experience: formData.experience,
+          completedProjects: formData.completedProjects,
+          isOpenToWork: formData.isOpenToWork,
+          email: formData.email,
+          phone: formData.phone,
+          skills: {
+            createMany: {
+              data: formData.skills.map((skill) => ({
+                label: skill.label,
+                value: skill.value,
+              })),
+            },
+          },
+          socialLinks: {
+            createMany: {
+              data: formData.socialLinks.map((link) => ({
+                label: link.label,
+                value: link.value,
+              })),
+            },
+          },
+          projects: {
+            createMany: {
+              data: formData.projects.map((project) => ({
+                projectName: project.projectName,
+                projectDescription: project.projectDescription,
+                repositoryUrl: project.repositoryUrl,
+                demoUrl: project.demoUrl,
+              })),
+            },
+          },
+          educationWithExperiences: {
+            createMany: {
+              data: formData.educationWithExperiences.map((eduExp) => ({
+                orgName: eduExp.orgName,
+                fromDate: eduExp.fromDate,
+                toDate: eduExp.toDate,
+                type: eduExp.type,
+                designation: eduExp.designation,
+                location: eduExp.location,
+              })),
+            },
           },
         },
-        socialLinks: {
-          createMany: {
-            data: formData.socialLinks!,
-          },
+        include: {
+          skills: true,
+          socialLinks: true,
+          projects: true,
+          educationWithExperiences: true,
         },
-        projects: {
-          createMany: {
-            data: formData.projects!,
-          },
-        },
-        educationWithExperiences: {
-          createMany: {
-            data: formData.educationWithExperiences,
-          },
-        },
-      },
+      });
     });
-    return updatedProfile as TSProfileSchema;
   } catch (error: any) {
-    return {
-      error: error.message,
-    };
+    error = error.message;
   } finally {
     await prisma.$disconnect();
   }
+
+  return { updatedProfile, error };
 }

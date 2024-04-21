@@ -13,7 +13,7 @@ import { FaGlobe } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { socialLinksSVGs } from "@/components/social-links";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formDefaultValues } from "@/lib/defaultValues";
+import { profileFormDefaultValues } from "@/lib/defaultValues";
 
 export default function PortfolioPage({ formValues }: { formValues: any }) {
   const [mounted, setMounted] = React.useState(false);
@@ -38,7 +38,7 @@ export default function PortfolioPage({ formValues }: { formValues: any }) {
     socialLinks,
     theme,
     font,
-  } = formDefaultValues;
+  } = profileFormDefaultValues;
 
   return (
     <div className="w-full overflow-y-scroll">

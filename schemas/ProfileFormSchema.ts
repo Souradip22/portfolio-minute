@@ -38,7 +38,7 @@ export const profileSchema = z.object({
 
   phone: z
     .string()
-    .min(10, {
+    .min(0, {
       message: "phone must be at least 2 characters.",
     })
     .max(14, {

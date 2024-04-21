@@ -59,30 +59,6 @@ type TSProfileSchema = z.infer<typeof profileSchema>;
 // This can come from your database or API.
 const defaultValues: Partial<TSProfileSchema> = profileFormDefaultValues;
 
-type UnknownArrayOrObject = unknown[] | Record<string, unknown>;
-
-// // https://github.com/react-hook-form/react-hook-form/discussions/1991#discussioncomment-351784
-export const dirtyValues = (
-  dirtyFields: UnknownArrayOrObject | boolean,
-  allValues: UnknownArrayOrObject
-): UnknownArrayOrObject => {
-  // NOTE: Recursive function.
-
-  // If *any* item in an array was modified, the entire array must be submitted, because there's no
-  // way to indicate "placeholders" for unchanged elements. `dirtyFields` is `true` for leaves.
-  if (dirtyFields === true || Array.isArray(dirtyFields)) {
-    return allValues;
-  }
-
-  // Here, we have an object.
-  return Object.fromEntries(
-    Object.keys(dirtyFields).map((key: string) => [
-      key,
-      dirtyValues(dirtyFields[key], allValues[key]),
-    ])
-  );
-};
-
 export default function FormSection({
   profileDetails,
   username,
@@ -196,27 +172,21 @@ export default function FormSection({
   ]);
 
   async function onSubmit(data: TSProfileSchema) {
-    console.log("DIRTY VALUES ==> ", dirtyValues(formState.dirtyFields, data));
     if (data.id) {
       console.log("Updated Form", data);
-      // const response = await fetch("/api/profileee", {
-      //   method: "PATCH",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data),
-      // });
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      // if (!response.ok) {
-      //   throw new Error("Failed to create profile");
-      // }
-      // const updatedProfileDetails: TSProfileSchema = await response.json();
-      // console.log("UPDATED PROFILE==>", updatedProfileDetails);
-      // Object.entries(updatedProfileDetails).forEach(
-      //   ([key, value]: [any, any]) => {
-      //     setValue(key, value);
-      //   }
-      // );
+      if (!response.ok) {
+        throw new Error("Failed to create profile");
+      }
+      const updatedProfileDetails: TSProfileSchema = await response.json();
+      console.log("UPDATED PROFILE==>", updatedProfileDetails);
       toast({
         description: "UPDATE Profile",
       });
@@ -248,7 +218,6 @@ export default function FormSection({
 
   return (
     <div className="bg-white p-4 w-[30%] overflow-y-scroll h-screen">
-      <p>THIS IS A NEW FORM CHH</p>
       {username && (
         <div className="bg-indigo-500 w-full flex justify-center rounded shadow hover:translate-y-1 transition ease-in duration-150">
           <h2 className=" font-bold text-gray-100 p-4">

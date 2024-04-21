@@ -27,7 +27,7 @@ export default function DomainPage({
     email,
     skills,
     projects,
-    openToWork,
+    isOpenToWork: openToWork,
     completedProjects,
     experience,
     educationWithExperiences: eduExpValues,
@@ -352,7 +352,7 @@ export default function DomainPage({
               )}
             </div>
             <div>
-              {skills && skills.length > 0 && (
+              {eduExpValues && eduExpValues.length > 0 && (
                 <div className="relative flex flex-wrap items-center justify-between gap-6">
                   <span className="relative text-3xl dark:text-gray-200 font-semibold">
                     Education
