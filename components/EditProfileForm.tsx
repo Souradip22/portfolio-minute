@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import {
   Accordion,
@@ -42,6 +41,7 @@ import { toast } from "./ui/use-toast";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { AddEditProjectDialog } from "./AddEditProjectDialog";
 import { AddEduExpDialog } from "./AddEditExpDialog";
+import { getProfile } from "@/lib/fetchers";
 
 const filenames = skillNames;
 
@@ -53,28 +53,27 @@ const skillOptions: Option[] = filenames.map((filename) => ({
   value: filename, // Use the filename as the value
 }));
 
-export const profileFormSchema = profileSchema;
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+//extract the TypeScript type that corresponds to the schema
+type TSProfileSchema = z.infer<typeof profileSchema>;
 
 // This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = profileFormDefaultValues;
+const defaultValues: Partial<TSProfileSchema> = profileFormDefaultValues;
 
 export default function FormSection({
-  formValues,
-  updateFormValues,
+  profileDetails,
   username,
+  updateProfileDetails, // Add this prop
 }: {
-  formValues: any;
-  updateFormValues: any;
+  profileDetails: any;
   username?: string;
+  updateProfileDetails: any;
 }) {
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues,
+  const form = useForm<TSProfileSchema>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: profileDetails || defaultValues,
     mode: "onChange",
   });
-  const { watch, getValues } = form;
+  const { watch, getValues, setValue, formState } = form;
 
   const { fields: socialLinksField, update: updateSocialLinks } = useFieldArray(
     {
@@ -130,23 +129,31 @@ export default function FormSection({
   const themeValue = watch("theme");
   const fontValue = watch("font");
 
+  const id = watch("id");
   useEffect(() => {
-    updateFormValues({
-      shortname: shortnameValue,
-      fullName: fullNameValue,
-      bio: bioValue,
-      phone: phoneValue,
-      email: emailValue,
-      skills: skillsValue,
-      projects: projectsValue,
-      openToWork: openToWorkValue,
-      experience: expValue,
-      completedProjects: completedProjectsValue,
-      eduExpValues: eduExpValues,
-      socialLinks: socialLinksValue,
-      theme: themeValue,
-      font: fontValue,
-    });
+    if (formState.isDirty) {
+      const updatedProfileDetails = {
+        shortname: shortnameValue,
+        fullName: fullNameValue,
+        bio: bioValue,
+        phone: phoneValue,
+        email: emailValue,
+        skills: skillsValue,
+        projects: projectsValue,
+        isOpenToWork: openToWorkValue,
+        experience: expValue,
+        completedProjects: completedProjectsValue,
+        educationWithExperiences: eduExpValues,
+        socialLinks: socialLinksValue,
+        theme: themeValue,
+        font: fontValue,
+        id: id,
+      };
+
+      // Call updateProfileDetails function with updated profile details
+      updateProfileDetails(updatedProfileDetails);
+      console.log("update Profile details called");
+    }
   }, [
     shortnameValue,
     fullNameValue,
@@ -164,26 +171,49 @@ export default function FormSection({
     fontValue,
   ]);
 
-  async function onSubmit(data: any) {
-    try {
-      const createProfileResponse = await fetch("/api/profile", {
-        method: "POST",
+  async function onSubmit(data: TSProfileSchema) {
+    if (data.id) {
+      console.log("Updated Form", data);
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
-      if (!createProfileResponse.ok) {
+      if (!response.ok) {
         throw new Error("Failed to create profile");
       }
-    } catch (error) {
-      console.error("Error creating profile:", error);
+      const updatedProfileDetails: TSProfileSchema = await response.json();
+      console.log("UPDATED PROFILE==>", updatedProfileDetails);
+      toast({
+        description: "UPDATE Profile",
+      });
+    } else {
+      try {
+        // Make your second request to insert the username into the database
+        const response = await fetch("/api/profile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create profile");
+        }
+        const createProfileResponse: TSProfileSchema = await response.json();
+        setValue("id", createProfileResponse.id);
+        toast({
+          description: "Create Profile submitted",
+        });
+      } catch (error) {
+        // Handle errors during insertion
+        console.error("Error creating profile:", error);
+      }
     }
-    toast({
-      description: "User Profile Created",
-      className: "bg-white",
-    });
   }
 
   return (
@@ -202,6 +232,18 @@ export default function FormSection({
             <AccordionItem value="appearance">
               <AccordionTrigger>Appearance</AccordionTrigger>
               <AccordionContent>
+                <FormField
+                  control={form.control}
+                  name="id"
+                  render={({ field }) => (
+                    <FormItem className="mb-4" style={{ display: "none" }}>
+                      <FormControl>
+                        {/* Use a hidden input field to store the value */}
+                        <Input type="hidden" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="theme"

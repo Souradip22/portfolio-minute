@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Providers } from "./providers";
 import { useTheme } from "next-themes";
+import { Toaster } from "@/components/ui/toaster";
 
 const epilogue = Epilogue({ subsets: ["latin"] });
 
@@ -17,7 +18,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log(children);
   return (
     <html
       lang="en"
@@ -30,6 +30,7 @@ export default function RootLayout({
         }`}
       >
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
