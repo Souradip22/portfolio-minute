@@ -12,8 +12,13 @@ import { FaGithub } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { socialLinksSVGs } from "@/components/social-links";
+import { profileFormDefaultValues } from "@/lib/defaultValues";
 
-export default function DomainPage({ formValues }: { formValues: any }) {
+export default function DomainPage({
+  profileDetails,
+}: {
+  profileDetails: any;
+}) {
   const {
     shortname,
     fullName,
@@ -25,16 +30,16 @@ export default function DomainPage({ formValues }: { formValues: any }) {
     openToWork,
     completedProjects,
     experience,
-    eduExpValues,
+    educationWithExperiences: eduExpValues,
     socialLinks,
     theme,
     font,
-  } = formValues;
+  } = profileDetails || profileFormDefaultValues;
 
   return (
-    <div className="mx-auto flex w-[70%] flex-col h-screen justify-between gap-4 p-4 overflow-y-scroll">
+    <div className="mx-auto flex w-[70%] flex-col h-screen justify-between gap-4 px-4 overflow-y-scroll">
       <div
-        className=" bg-purple-400 bg-indigo-400 bg-amber-400 bg-lime-400 bg-pink-400 text-indigo-600 text-purple-600
+        className="bg-purple-500 bg-indigo-500 bg-amber-500 bg-lime-500 bg-pink-500 bg-purple-400 bg-indigo-400 bg-amber-400 bg-lime-400 bg-pink-400 text-indigo-600 text-purple-600
        text-lime-600 text-amber-600 text-pink-600"
       >
         <div></div>
@@ -275,7 +280,7 @@ export default function DomainPage({ formValues }: { formValues: any }) {
           </div>
         </div> */}
 
-        <div className={skills.length > 0 ? "mt-10 lg:mt-14" : "hidden"}>
+        <div className={skills?.length > 0 ? "mt-10 lg:mt-14" : "hidden"}>
           {skills && skills.length > 0 && (
             <div className="relative flex flex-wrap items-center justify-between gap-6">
               <span className="relative text-3xl dark:text-gray-200 font-semibold">
@@ -382,7 +387,7 @@ export default function DomainPage({ formValues }: { formValues: any }) {
           </div>
         </div>
 
-        <div className={projects.length > 0 ? "mt-10 lg:mt-14" : "hidden"}>
+        <div className={projects?.length > 0 ? "mt-10 lg:mt-14" : "hidden"}>
           {projects && projects.length > 0 && (
             <div className="relative flex flex-wrap items-center justify-between gap-6">
               <span className="relative text-3xl dark:text-gray-200 font-semibold">
@@ -457,13 +462,18 @@ export default function DomainPage({ formValues }: { formValues: any }) {
                   Drop me a mail at{" "}
                   <a
                     href={`mailto:${email}`}
-                    className="border-b-2 border-amber-400 hover:border-b-4"
+                    className="border-b border-amber-400 hover:border-b-2"
                   >
                     {email}
                   </a>
                 </>
               )}{" "}
-              {email && phone && <>or</>} {phone && <>call me at {phone}</>}
+              {email && phone && <>or</>}{" "}
+              {phone && (
+                <span className="border-b border-amber-400 hover:border-b-2">
+                  call me at {phone}
+                </span>
+              )}
             </p>
             <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
               <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">

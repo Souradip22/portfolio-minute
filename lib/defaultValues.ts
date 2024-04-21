@@ -1,8 +1,8 @@
-import { profileFormSchema } from "@/components/FormSection";
+import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { z } from "zod";
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
-export const formDefaultValues: Partial<ProfileFormValues> = {
+type TSProfileSchema = z.infer<typeof profileSchema>;
+export const profileFormDefaultValues: Partial<TSProfileSchema> = {
   theme: "purple",
   font: "font_1",
   shortname: "COOL",

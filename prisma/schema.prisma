@@ -17,7 +17,7 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
-  username      String?
+  username      String?   @unique
   gh_username   String?
   email         String?   @unique
   emailVerified DateTime?
@@ -26,11 +26,32 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-  shortName     String?
-  skills        String[]
-  projects      Project[]
-  Links         Links[]
+  profile Profile?
 }
+
+model Profile {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  font                String?
+  theme               String?
+  shortname           String?
+  fullName            String?
+  bio                 String?
+  experience          String?
+  completedProjects   String?
+  isOpenToWork        Boolean?
+  phone               String?
+  skills              Skill[]
+  socialLinks         SocialLink[]
+  projects            Project[]
+  educationWithExperiences EducationWithExperience[]
+
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String  @unique
+}
+
 
 model Account {
   id                       String  @id @default(cuid())
@@ -73,29 +94,45 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// Define the Skill model
+model Skill {
+  id          String       @id @default(cuid())
+  label       String
+  value       String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+// Define the SocialLink model
+model SocialLink {
+  id          String       @id @default(cuid())
+  value       String
+  label       String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+// Define the Project model
 model Project {
-  id            String      @id @default(cuid())
-  name          String
-  about         String
-  repositoryURL String?
-  demoURL       String?
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  @@index([userId])
+  id                String       @id @default(cuid())
+  projectName       String
+  projectDescription String
+  repositoryUrl     String
+  demoUrl           String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
 }
 
-model Links {
-  id            String      @id @default(uuid())
-  github        String?
-  twitter       String?
-  linkedin      String?
-  medium        String?
-  hashnode      String?
-  dribble       String?
-  resume        String?
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  @@index([userId])
+// Define the EducationWithExperience model
+model EducationWithExperience {
+  id            String       @id @default(cuid())
+  orgName       String
+  fromDate      String
+  toDate        String
+  type          String
+  designation   String
+  location      String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
 }
-
 
