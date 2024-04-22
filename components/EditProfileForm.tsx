@@ -115,7 +115,7 @@ export default function FormSection({
   const fullNameValue = watch("fullName");
   const bioValue = watch("bio");
   const phoneValue = watch("phone");
-  const emailValue = watch("email");
+  const userEmailValue = watch("userEmail");
   const skillsValue = watch("skills");
   const projectsValue = watch("projects");
 
@@ -137,7 +137,7 @@ export default function FormSection({
         fullName: fullNameValue,
         bio: bioValue,
         phone: phoneValue,
-        email: emailValue,
+        userEmail: userEmailValue,
         skills: skillsValue,
         projects: projectsValue,
         isOpenToWork: openToWorkValue,
@@ -152,14 +152,13 @@ export default function FormSection({
 
       // Call updateProfileDetails function with updated profile details
       updateProfileDetails(updatedProfileDetails);
-      console.log("update Profile details called");
     }
   }, [
     shortnameValue,
     fullNameValue,
     bioValue,
     phoneValue,
-    emailValue,
+    userEmailValue,
     skillsValue,
     projectsValue,
     openToWorkValue,
@@ -172,8 +171,8 @@ export default function FormSection({
   ]);
 
   async function onSubmit(data: TSProfileSchema) {
+    console.log("Form Submission", data);
     if (data.id) {
-      console.log("Updated Form", data);
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: {
@@ -204,11 +203,20 @@ export default function FormSection({
         if (!response.ok) {
           throw new Error("Failed to create profile");
         }
-        const createProfileResponse: TSProfileSchema = await response.json();
-        setValue("id", createProfileResponse.id);
-        toast({
-          description: "Create Profile submitted",
-        });
+        const createProfileResponse: any = await response.json();
+        console.log(
+          "createProfileResponse id ",
+          createProfileResponse.createdProfile.id
+        );
+        if (createProfileResponse && createProfileResponse.createdProfile) {
+          setValue("id", createProfileResponse.createdProfile.id);
+          toast({
+            description: "Create Profile submitted",
+          });
+        }
+        if (createProfileResponse && createProfileResponse.error) {
+          console.error("somethign went wrong, unabel to create a profile");
+        }
       } catch (error) {
         // Handle errors during insertion
         console.error("Error creating profile:", error);
@@ -389,7 +397,7 @@ export default function FormSection({
                 />
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="userEmail"
                   render={({ field }) => (
                     <FormItem className="mb-4">
                       <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">

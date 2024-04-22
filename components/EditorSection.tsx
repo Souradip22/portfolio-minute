@@ -24,11 +24,11 @@ export default function EditorSection() {
     const fetchData = async () => {
       try {
         const userResponse = await getUser();
-        console.log("FETCH RESULT ARRIVED for Users");
+        // console.log("FETCH RESULT ARRIVED for Users");
         setUsername(userResponse?.username || "");
 
         const profileResponse = await getProfile();
-        console.log("FETCH RESULT ARRIVED for profile");
+        // console.log("FETCH RESULT ARRIVED for profile");
         if (!profileResponse) {
           setProfileDetails(null);
         } else {

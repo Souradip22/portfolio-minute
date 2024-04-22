@@ -1,56 +1,76 @@
-"use client";
-import React from "react";
-import { SignOutButton } from "@/components/AuthButtons";
+import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { notFound, redirect } from "next/navigation";
+// import BlurImage from "@/components/blur-image";
+// import { placeholderBlurhash, toDateString } from "@/lib/utils";
+// import BlogCard from "@/components/blog-card";
+import { getProfileForSite, getSiteData } from "@/lib/fetchers";
 import Navbar from "@/components/Navbar";
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import Image from "next/image";
-
 import circleText from "@/assets/img/circle-text.svg";
 import circleTextLight from "@/assets/img/circle-text-light.svg";
 import { FaGithub } from "react-icons/fa";
-import { FaGlobe } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { socialLinksSVGs } from "@/components/social-links";
-import { Skeleton } from "@/components/ui/skeleton";
-import { profileFormDefaultValues } from "@/lib/defaultValues";
 
-export default function PortfolioPage({ formValues }: { formValues: any }) {
-  const [mounted, setMounted] = React.useState(false);
+export async function generateStaticParams() {
+  const allSites = await prisma.site.findMany({
+    select: {
+      subdomain: true,
+    },
+  });
+  const allPaths = allSites
+    .flatMap(({ subdomain }) => [
+      subdomain && {
+        domain: `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+      },
+    ])
+    .filter(Boolean);
+  return allPaths;
+}
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setMounted(true);
-    }, 2000);
-  }, []);
-  const {
-    shortname,
-    fullName,
-    bio,
-    phone,
-    userEmail,
-    skills,
-    projects,
-    isOpenToWork: openToWork,
-    completedProjects,
-    experience,
-    educationWithExperiences: eduExpValues,
-    socialLinks,
-    theme,
-    font,
-  } = profileFormDefaultValues;
+export default async function SiteHomePage({
+  params,
+}: {
+  params: { domain: string };
+}) {
+  const domain = decodeURIComponent(params.domain);
+  const [data, profile] = await Promise.all([
+    getSiteData(domain),
+    getProfileForSite(domain),
+  ]);
+
+  if (!data) {
+    // notFound();
+    redirect("http://localhost:3000");
+  }
+  const shortname = profile?.shortname;
+  const fullName = profile?.fullName;
+  const bio = profile?.bio;
+  const phone = profile?.phone;
+  const userEmail = profile?.userEmail;
+  const skills = profile?.skills;
+  const projects = profile?.projects;
+  const openToWork = profile?.isOpenToWork;
+  const completedProjects = profile?.completedProjects;
+  const experience = profile?.experience;
+  const eduExpValues = profile?.educationWithExperiences;
+  const socialLinks = profile?.socialLinks;
+  const theme = profile?.theme;
+  const font = profile?.font;
 
   return (
-    <div className="w-full overflow-y-scroll">
-      <div className="mx-auto flex w-full md:w-[70%] flex-col h-screen justify-between gap-4 px-4 ">
-        <div
-          className=" bg-purple-400 bg-indigo-400 bg-amber-400 bg-lime-400 bg-pink-400 text-indigo-600 text-purple-600
+    <>
+      <div className="w-full overflow-y-scroll">
+        <div className="mx-auto flex w-full md:w-[70%] flex-col h-screen justify-between gap-4 px-4 ">
+          <div
+            className=" bg-purple-400 bg-indigo-400 bg-amber-400 bg-lime-400 bg-pink-400 text-indigo-600 text-purple-600
        text-lime-600 text-amber-600 text-pink-600"
-        >
-          <div></div>
-        </div>
-        <Navbar />
-        {mounted ? (
+          >
+            <div></div>
+          </div>
+          <Navbar />
+
           <div className="rounded-2xl bg-white p-6 shadow dark:bg-black dark:shadow-dark lg:col-span-2 lg:p-10">
             <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
               <div className="">
@@ -73,9 +93,7 @@ export default function PortfolioPage({ formValues }: { formValues: any }) {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 dark:bg-light"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
                 </span>
-                <span>
-                  Available For Hire {theme} {font}
-                </span>
+                <span>Available For Hire</span>
               </div>
             </div>
 
@@ -192,10 +210,10 @@ export default function PortfolioPage({ formValues }: { formValues: any }) {
                           width={16}
                           height={16}
                           className=""
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display =
-                              "none"; // Hide the image if it fails to load
-                          }}
+                          // onError={(e) => {
+                          //   (e.target as HTMLImageElement).style.display =
+                          //     "none"; // Hide the image if it fails to load
+                          // }}
                         />
                         {item.label}
                       </button>
@@ -463,17 +481,8 @@ export default function PortfolioPage({ formValues }: { formValues: any }) {
           </div>
         </div> */}
           </div>
-        ) : (
-          <div>
-            <Skeleton className="h-[400px] w-full rounded-xl bg-gray-200" />
-            <Skeleton className="h-[400px] w-full mt-2 rounded-xl bg-gray-200" />
-
-            <Skeleton className="h-[400px] w-full mt-2  rounded-xl bg-gray-200" />
-            <Skeleton className="h-[400px] w-full mt-2  rounded-xl bg-gray-200" />
-            <Skeleton className="h-[400px] w-full mt-2  rounded-xl bg-gray-200" />
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -9,6 +9,16 @@ CREATE TABLE "User" (
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Profile" (
+    "id" TEXT NOT NULL,
+    "email" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "font" TEXT,
     "theme" TEXT,
     "shortname" TEXT,
@@ -18,8 +28,24 @@ CREATE TABLE "User" (
     "completedProjects" TEXT,
     "isOpenToWork" BOOLEAN,
     "phone" TEXT,
+    "userId" TEXT NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Site" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "description" TEXT,
+    "subdomain" TEXT,
+    "message404" TEXT DEFAULT 'Blimey! You''ve found a page that doesn''t exist.',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT,
+    "profileId" TEXT,
+
+    CONSTRAINT "Site_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -65,7 +91,7 @@ CREATE TABLE "Skill" (
     "id" TEXT NOT NULL,
     "label" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "userId" TEXT,
+    "profileId" TEXT,
 
     CONSTRAINT "Skill_pkey" PRIMARY KEY ("id")
 );
@@ -75,7 +101,7 @@ CREATE TABLE "SocialLink" (
     "id" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "label" TEXT NOT NULL,
-    "userId" TEXT,
+    "profileId" TEXT,
 
     CONSTRAINT "SocialLink_pkey" PRIMARY KEY ("id")
 );
@@ -87,7 +113,7 @@ CREATE TABLE "Project" (
     "projectDescription" TEXT NOT NULL,
     "repositoryUrl" TEXT NOT NULL,
     "demoUrl" TEXT NOT NULL,
-    "userId" TEXT,
+    "profileId" TEXT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -101,7 +127,7 @@ CREATE TABLE "EducationWithExperience" (
     "type" TEXT NOT NULL,
     "designation" TEXT NOT NULL,
     "location" TEXT NOT NULL,
-    "userId" TEXT,
+    "profileId" TEXT,
 
     CONSTRAINT "EducationWithExperience_pkey" PRIMARY KEY ("id")
 );
@@ -111,6 +137,21 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Profile_email_key" ON "Profile"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Site_subdomain_key" ON "Site"("subdomain");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Site_userId_key" ON "Site"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Site_profileId_key" ON "Site"("profileId");
 
 -- CreateIndex
 CREATE INDEX "Account_userId_idx" ON "Account"("userId");
@@ -131,19 +172,28 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- AddForeignKey
+ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Site" ADD CONSTRAINT "Site_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Site" ADD CONSTRAINT "Site_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "Profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Skill" ADD CONSTRAINT "Skill_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Skill" ADD CONSTRAINT "Skill_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "Profile"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SocialLink" ADD CONSTRAINT "SocialLink_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "SocialLink" ADD CONSTRAINT "SocialLink_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "Profile"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Project" ADD CONSTRAINT "Project_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "Profile"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EducationWithExperience" ADD CONSTRAINT "EducationWithExperience_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "EducationWithExperience" ADD CONSTRAINT "EducationWithExperience_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "Profile"("id") ON DELETE SET NULL ON UPDATE CASCADE;

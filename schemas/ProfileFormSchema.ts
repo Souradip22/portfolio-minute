@@ -31,10 +31,7 @@ export const profileSchema = z.object({
   experience: z.string().min(0).max(90).optional(),
   completedProjects: z.string().min(0).max(1000).optional(),
   isOpenToWork: z.boolean().default(true).optional(),
-  email: z
-    .string()
-    .email({ message: "Please enter a valid email." })
-    .optional(),
+  userEmail: z.string().optional(),
 
   phone: z
     .string()

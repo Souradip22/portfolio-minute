@@ -13,7 +13,7 @@ export interface ProfileFormData {
   experience: string;
   completedProjects: string;
   isOpenToWork: boolean;
-  email: string;
+  userEmail: string;
   phone: string;
   skills: { label: string; value: string }[];
   socialLinks: { label: string; value: string }[];

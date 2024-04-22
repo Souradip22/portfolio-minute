@@ -24,7 +24,7 @@ export default function DomainPage({
     fullName,
     bio,
     phone,
-    email,
+    userEmail,
     skills,
     projects,
     isOpenToWork: openToWork,
@@ -457,18 +457,18 @@ export default function DomainPage({
               </span>
             </div>
             <p className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
-              {email && (
+              {userEmail && (
                 <>
                   Drop me a mail at{" "}
                   <a
-                    href={`mailto:${email}`}
+                    href={`mailto:${userEmail}`}
                     className="border-b border-amber-400 hover:border-b-2"
                   >
-                    {email}
+                    {userEmail}
                   </a>
                 </>
               )}{" "}
-              {email && phone && <>or</>}{" "}
+              {userEmail && phone && <>or</>}{" "}
               {phone && (
                 <span className="border-b border-amber-400 hover:border-b-2">
                   call me at {phone}

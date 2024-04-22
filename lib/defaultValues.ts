@@ -11,7 +11,7 @@ export const profileFormDefaultValues: Partial<TSProfileSchema> = {
   experience: "5",
   completedProjects: "10",
   isOpenToWork: true,
-  email: "souradip000@gmail.com",
+  userEmail: "souradip000@gmail.com",
   phone: "+91 7318757426",
   socialLinks: [
     { value: "https://github.com/Souradip22", label: "github" },

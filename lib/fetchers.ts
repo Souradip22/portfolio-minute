@@ -5,6 +5,7 @@ import useSWR from "swr";
 
 import { z } from "zod";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
+import { unstable_cache } from "next/cache";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
@@ -89,6 +90,65 @@ export async function getUser(): Promise<any | null> {
     return null;
   }
 }
+
+export async function getSiteData(domain: string) {
+  const subdomain = domain.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)
+    ? domain.replace(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`, "")
+    : null;
+  return await unstable_cache(
+    async () => {
+      return prisma.site.findUnique({
+        where: {
+          subdomain: subdomain ? subdomain : "custom",
+        },
+        include: {
+          user: true,
+        },
+      });
+    },
+    [`${domain}-metadata`],
+    {
+      revalidate: 900,
+      tags: [`${domain}-metadata`],
+    }
+  )();
+}
+
+export async function getProfileForSite(domain: string) {
+  const subdomain = domain.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)
+    ? domain.replace(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`, "")
+    : undefined;
+
+  return await unstable_cache(
+    async () => {
+      return prisma.profile.findFirst({
+        where: {
+          site: {
+            subdomain: subdomain,
+          },
+          // published: true,
+        },
+        include: {
+          skills: true,
+          socialLinks: true,
+          projects: true,
+          educationWithExperiences: true,
+        },
+        // orderBy: [
+        //   {
+        //     createdAt: "desc",
+        //   },
+        // ],
+      });
+    },
+    [`${domain}-profile`],
+    {
+      revalidate: 900,
+      tags: [`${domain}-profile`],
+    }
+  )();
+}
+
 export default async function fetcher(url: string) {
   return fetch(url).then((r) => r.json());
 }
