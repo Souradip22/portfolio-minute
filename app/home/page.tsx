@@ -1,103 +1,118 @@
 import { GoogleSignInButton, SignOutButton } from "@/components/AuthButtons";
+import { SparklesCore } from "@/components/Sparkles";
 import { getSession } from "@/lib/auth";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await getSession();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          {session ? <SignOutButton /> : <GoogleSignInButton />}
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <div className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden h-screen">
+      <div className="w-full absolute inset-0 h-screen">
+        <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.2}
+          particleDensity={20}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
         />
       </div>
+      {/* <div className="relative z-20">
+        <h1 className="md:text-7xl text-3xl lg:text-6xl font-bold text-center  text-white ">
+          Create your ptofile under one minute
+        </h1>
+        <div className="">
+          {session ? <SignOutButton /> : <GoogleSignInButton />}
+        </div>
+      </div> */}
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="pt-10 pb-10 md:pb-24 px-8 relative z-40 h-[800px]">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <div className="z-50" style={{ opacity: 1 }}>
+            <a
+              className="w-full flex items-center gap-2 mb-[40px] md:mb-[60px] group cursor-pointer md:border-none border border-solid border-[#eee2] p-1.5 rounded-full"
+              href="/cpp"
+            >
+              {/* <div className="flex gap-1 items-center">
+                <div className="text-white text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 md:hidden block">
+                  Copilot++ Launch
+                </div>
+                <div className="text-white text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 md:block hidden">
+                  Copilot++ Launch: Next Edit Prediction
+                </div>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  className="text-white opacity-50"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div> */}
+            </a>
+          </div>
+          <div className="z-50" style={{ opacity: 1 }}>
+            <div>
+              <h1 className=" text-white text-center text-3xl md:text-6xl mb-4 font-bold">
+                Make your own portfolio
+              </h1>
+            </div>
+            <div>
+              <div className="text-center font-medium text-base md:text-lg text-[#FFFFFF]/[.48] mb-8">
+                Build software faster in an editor designed for pair-programming
+                with AI
+              </div>
+            </div>
+            <div className="w-full">
+              <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-20 w-full relative z-40">
+                {session ? (
+                  <Link
+                    href={"/dashboard"}
+                    className="group md:w-fit group w-fit flex justify-center relative rounded-full p-px text-[0.8125rem] font-semibold leading-6 shadow-xl shadow-zinc-950 text-white"
+                  >
+                    <span className="absolute inset-0 overflow-hidden rounded-lg">
+                      <span className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                    </span>
+                    <div className="relative z-10 w-full flex justify-center rounded-lg bg-[#3887FD] bg-opacity-50 hover:bg-opacity-60 transition py-3 px-6 ring-1 items-center space-x-2">
+                      <span>Dashboard</span>
+                    </div>
+                    <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 opacity-20 group-hover:opacity-80"></span>
+                  </Link>
+                ) : (
+                  <GoogleSignInButton />
+                )}
+              </div>
+            </div>
+          </div>
+          <div
+            className="user-select-none user-drag-none w-full opacity-100 position: relative "
+            style={{ transform: "none" }}
+          >
+            <video
+              controls
+              autoPlay
+              width={800}
+              height={600}
+              className="border-2 border-purple-500 shadow-[0_10px_20px_rgba(240,_46,_170,_0.7)] rounded-md"
+            >
+              <source src="/intro.webm" type="video/webm" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
       </div>
-    </main>
-    // <h1>MAIN PAGE</h1>
+    </div>
   );
 }

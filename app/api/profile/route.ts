@@ -13,25 +13,25 @@ import { z } from "zod";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
-export async function GET() {
+export async function GET(): Promise<void | Response> {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return new Response("Not authenticated", { status: 401 });
   }
   const userId = session.user.id;
   const userProfile = await getProfile(userId as string);
-  return NextResponse.json(userProfile);
+  if (userProfile) {
+    return new Response(JSON.stringify(userProfile), { status: 200 });
+  } else {
+    return new Response("Error fetching profile", { status: 500 });
+  }
 }
 
 //Create a profile
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<void | Response> {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return new Response("Not authenticated", { status: 401 });
   }
   const body = await req.json();
   const userDetails = await getUser(session.user.email as string);
@@ -42,19 +42,17 @@ export async function POST(req: Request) {
       body as ProfileFormData,
       userDetails.username as string
     );
-    return NextResponse.json(profile);
+    return new Response(JSON.stringify(profile), { status: 200 });
   } else {
-    return NextResponse.json({ error: "Failed to create profile" });
+    return new Response("Error creating profile", { status: 500 });
   }
 }
 
 //Update a profile
-export async function PATCH(req: Request) {
+export async function PATCH(req: Request): Promise<void | Response> {
   const session = await getSession();
   if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
+    return new Response("Not authenticated", { status: 401 });
   }
   const body = await req.json();
   const userDetails = await getUser(session.user.email as string);
@@ -65,5 +63,9 @@ export async function PATCH(req: Request) {
     subdomain as string
   );
 
-  return NextResponse.json(updatedProfileDetails);
+  if (updatedProfileDetails) {
+    return new Response(JSON.stringify(updatedProfileDetails), { status: 200 });
+  } else {
+    return new Response("Error updating profile", { status: 500 });
+  }
 }

@@ -44,7 +44,7 @@ export default async function SiteHomePage({
     // notFound();
     redirect("http://localhost:3000");
   }
-  const shortname = profile?.shortname;
+  const shortname = profile?.shortname || "";
   const fullName = profile?.fullName;
   const bio = profile?.bio;
   const phone = profile?.phone;
@@ -69,7 +69,7 @@ export default async function SiteHomePage({
           >
             <div></div>
           </div>
-          <Navbar />
+          <Navbar shortname={shortname} />
 
           <div className="rounded-2xl bg-white p-6 shadow dark:bg-black dark:shadow-dark lg:col-span-2 lg:p-10">
             <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
@@ -171,7 +171,7 @@ export default async function SiteHomePage({
                       target="_blank"
                       href={item.value}
                     >
-                      <div className="bg-white border border-amber-600 border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2 mt- not-prose px-6 py-3 text-black text-sm transform-gpu transition-transform w-full z-10">
+                      <div className="bg-white border border-amber-600 border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2 mt- not-prose px-6 py-3 text-black text-sm transform-gpu transition-transform w-full z-[2]">
                         <span className="mx-auto">
                           <p>Download Resume</p>
                         </span>

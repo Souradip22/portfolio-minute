@@ -10,26 +10,28 @@ import { IoIosArrowDown } from "react-icons/io";
 
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { NavItem } from "@/lib/types";
 import { navItems } from "@/lib/constants";
 import ThemeSwitch from "./ThemeSwitch";
+import { useRouter } from "next/navigation";
 
-export default function Navbar() {
-  const [animationParent] = useAutoAnimate();
-  const [isSideMenuOpen, setSideMenue] = useState(false);
+export default function Navbar({ shortname }: { shortname?: string }) {
+  const [isSideMenuOpen, setSideMenu] = useState(false);
   function openSideMenu() {
-    setSideMenue(true);
+    setSideMenu(true);
   }
-  function closeSideMenu() {
-    setSideMenue(false);
+
+  let first = shortname;
+  let second = "";
+  if (shortname) {
+    [first, second] = shortname.split(" ");
   }
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-10">
       <div className="mx-auto text-sm flex items-center justify-between rounded-2xl bg-white p-3 shadow dark:bg-black dark:shadow-dark">
         {/* left side  */}
-        <div ref={animationParent} className="flex items-center gap-10">
+        <div className="flex items-center gap-10 w-5/6">
           {/* logo */}
           <a
             href="index.html"
@@ -46,60 +48,34 @@ export default function Navbar() {
                 d="M0 1.5A1.5 1.5 0 0 1 1.5 0H9a1.5 1.5 0 0 1 1.5 1.5v21A1.5 1.5 0 0 1 9 24H1.5A1.5 1.5 0 0 1 0 22.5v-21Zm13.5 0A1.5 1.5 0 0 1 15 0h7.5A1.5 1.5 0 0 1 24 1.5V9a1.5 1.5 0 0 1-1.5 1.5H15A1.5 1.5 0 0 1 13.5 9V1.5Zm0 13.5a1.5 1.5 0 0 1 1.5-1.5h7.5A1.5 1.5 0 0 1 24 15v7.5a1.5 1.5 0 0 1-1.5 1.5H15a1.5 1.5 0 0 1-1.5-1.5V15Z"
               ></path>
             </svg>
-
-            <span>
-              {" "}
-              Bento<span className="text-primary">Folio</span>{" "}
-            </span>
+            {first && (
+              <span>
+                {" "}
+                {first}
+                {second && <span className="text-indigo-600">{second}</span>}
+              </span>
+            )}{" "}
           </a>
-          {isSideMenuOpen && <MobileNav closeSideMenu={closeSideMenu} />}
-          <div className="hidden lg:flex items-center gap-4 transition-all">
+
+          <div className="hidden lg:flex items-center gap-4 transition-all mx-auto">
             {navItems.map((d, i) => (
               <Link
                 key={i}
                 href={d.link ?? "#"}
-                className="relative group text-base font-medium transition-all rounded-lg px-3 py-2  hover:bg-gray-100 dark:hover:bg-zinc-900  dark:text-gray-200 dark:active:bg-zinc-900"
+                className="flex items-center gap-4 text-gray-500 dark:text-gray-400 rounded-md bg-gray-50 hover:text-gray-800 hover:bg-gray-100 dark:bg-stone-900 hover:dark:bg-stone-800 hover:dark:text-gray-200 px-3 py-2 active:dark:text-gray-200 cursor-pointer font-bold"
               >
-                <p className="flex cursor-pointer items-center gap-2 ">
-                  {/* {d.iconImage && <d.iconImage />} */}
-                  <span>{d.label}</span>
-                  {d.children && (
-                    <IoIosArrowDown className=" rotate-180  transition-all group-hover:rotate-0" />
-                  )}
-                </p>
-
-                {/* group inline-flex items-center gap-2 rounded-lg px-3 py-2 text-center text-base font-medium text-muted transition hover:bg-light hover:text-dark group-[.active]/menu-item:bg-light group-[.active]/menu-item:text-dark dark:hover:bg-dark-2 dark:hover:text-white dark:group-[.active]/menu-item:bg-dark-2 dark:group-[.active]/menu-item:text-white */}
-
-                {/* dropdown */}
-                {d.children && (
-                  <div className="absolute   right-0   top-10 hidden w-auto  flex-col gap-1   rounded-lg bg-white py-3 shadow-md  transition-all group-hover:flex ">
-                    {d.children.map((ch, i) => (
-                      <Link
-                        key={i}
-                        href={ch.link ?? "#"}
-                        className=" flex cursor-pointer items-center  py-1 pl-6 pr-8  text-neutral-400 hover:text-black  "
-                      >
-                        {/* image */}
-                        {ch.iconImage && <ch.iconImage />}
-                        {/* item */}
-                        <span className="whitespace-nowrap   pl-3 ">
-                          {ch.label}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                {d.iconImage && <d.iconImage className="w-5 h-5" />}
+                {d.label}
               </Link>
             ))}
           </div>
-          {/* navitems */}
         </div>
 
         {/* right side data */}
-        <div className=" hidden lg:flex   items-center gap-8 ">
+        <div className=" hidden lg:flex   items-center gap-4 ">
           <ThemeSwitch />
 
-          <button className="h-fit rounded-lg border border-neutral-400 px-4 py-2  transition-all hover:border-black hover:text-black/90 dark:bg-gray-100 dark:hover:bg-gray-900 dark:hover:text-white">
+          <button className="rounded-md border border-neutral-400 px-4 py-2  transition-all hover:border-black hover:text-black/90 dark:bg-gray-100 dark:hover:bg-gray-900 dark:hover:text-white">
             Let Chat
           </button>
         </div>
@@ -109,87 +85,109 @@ export default function Navbar() {
           className="cursor-pointer text-3xl lg:hidden dark:text-white"
         />
       </div>
+      <MobileNav isSideMenuOpen={isSideMenuOpen} setSideMenu={setSideMenu} />
     </header>
   );
 }
 
-function MobileNav({ closeSideMenu }: { closeSideMenu: () => void }) {
+function MobileNav({
+  isSideMenuOpen,
+  setSideMenu,
+}: {
+  isSideMenuOpen: any;
+  setSideMenu: any;
+}) {
+  const router = useRouter();
+  const className =
+    "bg-black w-full max-w-[300px] lg:hidden transition-[margin-right] ease-in-out duration-500 fixed  top-0 bottom-0 right-0 z-40";
+  // Append class based on state of sidebar visiblity
+  const appendClass = isSideMenuOpen ? " mr-0" : " mr-[-300px] md:ml-0";
+
+  // Clickable menu items
+  const MenuItem = ({
+    icon,
+    name,
+    route,
+  }: {
+    icon: any;
+    name: any;
+    route: any;
+  }) => {
+    // Highlight menu item based on currently displayed route
+    const colorClass =
+      router === route ? "text-white" : "text-white/50 hover:text-white";
+
+    // console.log(router, route);
+    return (
+      <Link
+        href={route}
+        onClick={() => {
+          setSideMenu((oldVal: any) => !oldVal);
+        }}
+        className={`flex gap-1 [&>*]:my-auto text-md pl-6 py-3 border-b-[1px] border-b-white/10 ${colorClass}`}
+      >
+        <div className="text-xl flex [&>*]:mx-auto w-[30px]">{icon}</div>
+        <div>{name}</div>
+      </Link>
+    );
+  };
+
+  // Overlay to prevent clicks in background, also serves as our close button
+  const ModalOverlay = () => (
+    <div
+      className={`flex lg:hidden fixed top-0 left-0 bottom-0 right-0 bg-black/50 z-30`}
+      onClick={() => {
+        setSideMenu((oldVal: any) => !oldVal);
+      }}
+    />
+  );
   return (
-    <div className="fixed right-0 top-0 flex h-full min-h-screen w-full justify-start  bg-gray-900 bg-opacity-50 lg:hidden ">
-      <div className=" text-base font-medium transition-all rounded-r-lg  h-full w-[70%] sm:w-[30%] bg-white dark:bg-gray-950 px-4 py-4 shadow-2xl shadow-blue-500/20">
-        <section className="flex justify-end dark:text-white">
-          <AiOutlineClose
-            onClick={closeSideMenu}
-            className="cursor-pointer text-2xl "
-          />
-        </section>
-        <div className=" flex flex-col text-base  gap-2 ">
-          {navItems.map((d, i) => (
-            <SingleNavItem
-              key={i}
-              label={d.label}
-              iconImage={d.iconImage}
-              link={d.link}
-            >
-              {d.children}
-            </SingleNavItem>
-          ))}
+    <>
+      <div className={`${className}${appendClass}`}>
+        <div className="w-full max-w-[300px] text-base font-medium transition-all  ease-linear h-full duration-500 bg-white dark:bg-gray-950 px-6 py-10 shadow-2xl shadow-blue-500/20 flex flex-col justify-between ">
+          <div>
+            <div className="flex justify-end dark:text-white">
+              <AiOutlineClose
+                onClick={() => {
+                  setSideMenu((oldVal: any) => !oldVal);
+                }}
+                className="cursor-pointer text-2xl "
+              />
+            </div>
+            <div className=" flex flex-col text-base gap-2 mt-10">
+              {navItems.map((d, i) => (
+                <SingleNavItem
+                  key={i}
+                  label={d.label}
+                  iconImage={d.iconImage}
+                  link={d.link}
+                >
+                  {d.children}
+                </SingleNavItem>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-col  gap-8  mt-4 items-center">
+              <ThemeSwitch text="Change appearance" />
+
+              <button className="w-full  max-w-[300px]  rounded-xl border-2 border-neutral-400 px-4 py-2 text-neutral-400 transition-all hover:border-black hover:text-black/90">
+                Register
+              </button>
+            </div>
+          </div>
         </div>
-
-        <section className="  flex  flex-col   gap-8  mt-4 items-center">
-          <ThemeSwitch />
-
-          <button className="w-full  max-w-[200px]  rounded-xl border-2 border-neutral-400 px-4 py-2 text-neutral-400 transition-all hover:border-black hover:text-black/90">
-            Register
-          </button>
-        </section>
       </div>
-    </div>
+      {isSideMenuOpen ? <ModalOverlay /> : <></>}
+    </>
   );
 }
 
 function SingleNavItem(d: NavItem) {
-  const [animationParent] = useAutoAnimate();
-  const [isItemOpen, setItem] = useState(false);
-
-  function toggleItem() {
-    return setItem(!isItemOpen);
-  }
-
   return (
-    <Link
-      ref={animationParent}
-      onClick={toggleItem}
-      href={d.link ?? "#"}
-      className="relative rounded  px-2 py-3 transition-all transition-duration-200 hover:bg-gray-100 dark:hover:bg-zinc-900  dark:text-gray-400 dark:hover:text-gray-100 dark:active:bg-zinc-900"
-    >
-      <p className="flex cursor-pointer items-center gap-2  ">
-        <span>{d.label}</span>
-        {d.children && (
-          // rotate-180
-          <IoIosArrowDown
-            className={`text-xs transition-all  ${isItemOpen && " rotate-180"}`}
-          />
-        )}
-      </p>
-
-      {/* dropdown */}
-      {isItemOpen && d.children && (
-        <div className="  w-auto  flex-col gap-1   rounded-lg bg-white py-3   transition-all flex ">
-          {d.children.map((ch, i) => (
-            <Link
-              key={i}
-              href={ch.link ?? "#"}
-              className=" flex cursor-pointer items-center  py-1 pl-6 pr-8  text-neutral-400 hover:text-black  "
-            >
-              {/* image */}
-              {ch.iconImage && <ch.iconImage />}
-              {/* item */}
-              <span className="whitespace-nowrap   pl-3 ">{ch.label}</span>
-            </Link>
-          ))}
-        </div>
-      )}
-    </Link>
+    <span className="flex items-center gap-4 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-stone-900 hover:dark:bg-stone-800 dark:text-gray-300 px-4 py-3  cursor-pointer">
+      {d.iconImage && <d.iconImage className="w-4 h-4" />}
+      {d.label}
+    </span>
   );
 }

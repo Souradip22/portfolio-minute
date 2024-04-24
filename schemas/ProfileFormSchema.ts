@@ -9,16 +9,17 @@ export const profileSchema = z.object({
     .min(2, {
       message: "Short name must be at least 2 characters.",
     })
-    .max(10, {
+    .max(15, {
       message: "Short name must not be longer than 10 characters.",
-    }),
+    })
+    .optional(),
   fullName: z
     .string()
     .min(2, {
       message: "Full name must be at least 2 characters.",
     })
-    .max(20, {
-      message: "Full name must not be longer than 20 characters.",
+    .max(30, {
+      message: "Full name must not be longer than 30 characters.",
     }),
   bio: z
     .string()

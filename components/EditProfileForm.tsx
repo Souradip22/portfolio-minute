@@ -42,6 +42,8 @@ import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { AddEditProjectDialog } from "./AddEditProjectDialog";
 import { AddEduExpDialog } from "./AddEditExpDialog";
 import { getProfile } from "@/lib/fetchers";
+import SubdomainInfo from "./SubdomainInfo";
+import { SignOutButton } from "./AuthButtons";
 
 const filenames = skillNames;
 
@@ -59,7 +61,7 @@ type TSProfileSchema = z.infer<typeof profileSchema>;
 // This can come from your database or API.
 const defaultValues: Partial<TSProfileSchema> = profileFormDefaultValues;
 
-export default function FormSection({
+export default function EditProfileForm({
   profileDetails,
   username,
   updateProfileDetails, // Add this prop
@@ -212,6 +214,7 @@ export default function FormSection({
           setValue("id", createProfileResponse.createdProfile.id);
           toast({
             description: "Create Profile submitted",
+            variant: "destructive",
           });
         }
         if (createProfileResponse && createProfileResponse.error) {
@@ -225,17 +228,18 @@ export default function FormSection({
   }
 
   return (
-    <div className="bg-white p-4 w-[30%] overflow-y-scroll h-screen">
-      {username && (
-        <div className="bg-indigo-500 w-full flex justify-center rounded shadow hover:translate-y-1 transition ease-in duration-150">
-          <h2 className=" font-bold text-gray-100 p-4">
-            {username}.portfolio.me
-          </h2>
-        </div>
-      )}
+    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen">
+      <div className="flex justify-end">
+        <SignOutButton />
+      </div>
+
+      {username && <SubdomainInfo text={username} />}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 mt-5 mx-1"
+        >
           <Accordion type="single" collapsible>
             <AccordionItem value="appearance">
               <AccordionTrigger>Appearance</AccordionTrigger>
@@ -257,7 +261,7 @@ export default function FormSection({
                   name="theme"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-gray-400 border-amber-600 mx-auto ">
                         Theme
                       </FormLabel>
 
@@ -338,8 +342,8 @@ export default function FormSection({
                         <Input placeholder="short name" {...field} />
                       </FormControl>
                       <FormDescription>
-                        This is your public display name. It can be your real
-                        name or a pseudonym.
+                        This will be used as logo. Keep a space to get different
+                        colors
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -447,7 +451,7 @@ export default function FormSection({
                   control={form.control}
                   name="isOpenToWork"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -478,7 +482,7 @@ export default function FormSection({
                           <FormItem className="mb-4">
                             <FormControl>
                               <span className="flex items-center flex-row gap-2">
-                                <p>
+                                <p className="h-6 w-6 mx-auto bg-gray-100 rounded-md p-1 flex items-center mr-2">
                                   {socialLinksSVGs &&
                                     socialLinksSVGs[
                                       // @ts-ignore
@@ -630,9 +634,9 @@ export default function FormSection({
           </Accordion>
           <button
             type="submit"
-            className="bg-lime-600 px-4 py-3 font-semibold text-gray-100 rounded"
+            className="bg-lime-600 px-3 py-2 font-semibold text-gray-100 rounded"
           >
-            Publish
+            {form.getValues("id") ? "Update" : "Publish"}
           </button>
         </form>
       </Form>

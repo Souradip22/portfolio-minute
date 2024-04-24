@@ -1,5 +1,5 @@
 import { NavItem } from "./types";
-import { FiHome } from "react-icons/fi";
+import { FiHome, FiTool, FiInfo } from "react-icons/fi";
 import { FaTools } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 import { MdInfo } from "react-icons/md";
@@ -13,7 +13,7 @@ export const navItems: NavItem[] = [
   {
     label: "Skills",
     link: "#",
-    iconImage: FaTools,
+    iconImage: FiTool,
   },
   {
     label: "Projects",
@@ -23,7 +23,7 @@ export const navItems: NavItem[] = [
   {
     label: "About",
     link: "#",
-    iconImage: MdInfo,
+    iconImage: FiInfo,
   },
 ];
 

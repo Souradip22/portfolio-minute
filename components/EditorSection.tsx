@@ -1,7 +1,6 @@
 "use client";
-import DomainPage from "@/app/domain/page";
+
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import FormSection from "./FormSection";
 import { profileFormDefaultValues } from "@/lib/defaultValues";
 import useSWR from "swr";
 import fetcher, { getProfile, getUser } from "@/lib/fetchers";
@@ -9,6 +8,9 @@ import { UsernameDialog } from "./UsernameDialog";
 import EditProfileForm from "./EditProfileForm";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { z } from "zod";
+import MenuBarMobile from "./layout/MenubarMobile";
+import Sidebar from "./layout/Sidebar";
+import ProfilePage from "./ProfilePage";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
@@ -19,7 +21,7 @@ export default function EditorSection() {
   const [profileDetails, setProfileDetails] = useState<TSProfileSchema | null>(
     null
   );
-
+  const [showSidebar, setShowSidebar] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,33 +49,25 @@ export default function EditorSection() {
     fetchData();
   }, []);
 
-  // Function to update form field values
-  // const updateFormValues = (newValues: any) => {
-  //   setProfileDetails({ ...profileDetails, ...newValues });
-  // };
   const updateProfileDetails = (newProfileDetails: any) => {
     setProfileDetails(newProfileDetails);
   };
 
   return (
-    <div className="flex flex-row">
+    <div className="flex">
       {mounted ? (
         <>
-          <DomainPage profileDetails={profileDetails} />
-          {/* <FormSection
-            formValues={formValues}
-            updateFormValues={updateFormValues}
-            username={username || userInfo?.username}
-          /> */}
-
-          <EditProfileForm
-            profileDetails={profileDetails}
-            username={username}
-            updateProfileDetails={updateProfileDetails} // Add this prop
-          />
-          {!username && (
-            <UsernameDialog isOpen={true} setUsername={setUsername} />
-          )}
+          <MenuBarMobile setter={setShowSidebar} />
+          <Sidebar show={showSidebar} setter={setShowSidebar}>
+            <EditProfileForm
+              profileDetails={profileDetails}
+              username={username}
+              updateProfileDetails={updateProfileDetails}
+            />
+          </Sidebar>
+          <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
+            <ProfilePage profileDetails={profileDetails} />
+          </div>
         </>
       ) : (
         <p>Loading</p>
