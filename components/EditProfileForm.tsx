@@ -32,7 +32,7 @@ import {
 
 import { IoClose } from "react-icons/io5";
 import { profileFormDefaultValues } from "@/lib/defaultValues";
-import { skillNames } from "@/lib/constants";
+import { skillNames, themes } from "@/lib/constants";
 
 import { socialLinksSVGs } from "./social-links";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -133,28 +133,49 @@ export default function EditProfileForm({
 
   const id = watch("id");
   useEffect(() => {
-    if (formState.isDirty) {
-      const updatedProfileDetails = {
-        shortname: shortnameValue,
-        fullName: fullNameValue,
-        bio: bioValue,
-        phone: phoneValue,
-        userEmail: userEmailValue,
-        skills: skillsValue,
-        projects: projectsValue,
-        isOpenToWork: openToWorkValue,
-        experience: expValue,
-        completedProjects: completedProjectsValue,
-        educationWithExperiences: eduExpValues,
-        socialLinks: socialLinksValue,
-        theme: themeValue,
-        font: fontValue,
-        id: id,
-      };
+    // if (formState.isDirty) {
+    //   const updatedProfileDetails = {
+    //     shortname: shortnameValue,
+    //     fullName: fullNameValue,
+    //     bio: bioValue,
+    //     phone: phoneValue,
+    //     userEmail: userEmailValue,
+    //     skills: skillsValue,
+    //     projects: projectsValue,
+    //     isOpenToWork: openToWorkValue,
+    //     experience: expValue,
+    //     completedProjects: completedProjectsValue,
+    //     educationWithExperiences: eduExpValues,
+    //     socialLinks: socialLinksValue,
+    //     theme: themeValue,
+    //     font: fontValue,
+    //     id: id,
+    //   };
 
-      // Call updateProfileDetails function with updated profile details
-      updateProfileDetails(updatedProfileDetails);
-    }
+    //   // Call updateProfileDetails function with updated profile details
+    //   updateProfileDetails(updatedProfileDetails);
+    // }
+
+    const updatedProfileDetails = {
+      shortname: shortnameValue,
+      fullName: fullNameValue,
+      bio: bioValue,
+      phone: phoneValue,
+      userEmail: userEmailValue,
+      skills: skillsValue,
+      projects: projectsValue,
+      isOpenToWork: openToWorkValue,
+      experience: expValue,
+      completedProjects: completedProjectsValue,
+      educationWithExperiences: eduExpValues,
+      socialLinks: socialLinksValue,
+      theme: themeValue,
+      font: fontValue,
+      id: id,
+    };
+
+    // Call updateProfileDetails function with updated profile details
+    updateProfileDetails(updatedProfileDetails);
   }, [
     shortnameValue,
     fullNameValue,
@@ -267,30 +288,28 @@ export default function EditProfileForm({
 
                       <FormControl>
                         <div className="flex flex-row mt-2 gap-4">
-                          {["purple", "amber", "lime", "indigo", "pink"].map(
-                            (color, index) => (
-                              <label
-                                key={index}
-                                className={`flex items-center gap-2 cursor-pointer`}
+                          {themes.map((color, index) => (
+                            <label
+                              key={index}
+                              className={`flex items-center gap-2 cursor-pointer`}
+                            >
+                              <input
+                                type="radio"
+                                {...field}
+                                value={color}
+                                checked={field.value === color}
+                                onChange={() => field.onChange(color)}
+                                className="sr-only"
+                              />
+                              <span
+                                className={`h-6 w-6 rounded-full bg-${color}-500 border-2 border-transparent inline-block`}
                               >
-                                <input
-                                  type="radio"
-                                  {...field}
-                                  value={color}
-                                  checked={field.value === color}
-                                  onChange={() => field.onChange(color)}
-                                  className="sr-only"
-                                />
-                                <span
-                                  className={`h-6 w-6 rounded-full bg-${color}-500 border-2 border-transparent inline-block`}
-                                >
-                                  {field.value === color && (
-                                    <CheckIcon className="h-5 w-5 text-white items-center flex" />
-                                  )}
-                                </span>
-                              </label>
-                            )
-                          )}
+                                {field.value === color && (
+                                  <CheckIcon className="h-5 w-5 text-white items-center flex" />
+                                )}
+                              </span>
+                            </label>
+                          ))}
                         </div>
                       </FormControl>
                     </FormItem>

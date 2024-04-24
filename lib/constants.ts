@@ -1,5 +1,5 @@
-import { NavItem } from "./types";
-import { FiHome, FiTool, FiInfo } from "react-icons/fi";
+import { NavItem, ThemeOptions } from "./types";
+import { FiHome, FiTool, FiInfo, FiPhone } from "react-icons/fi";
 import { FaTools } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 import { MdInfo } from "react-icons/md";
@@ -7,23 +7,28 @@ import { MdInfo } from "react-icons/md";
 export const navItems: NavItem[] = [
   {
     label: "Home",
-    link: "#",
+    link: "home",
     iconImage: FiHome,
   },
   {
     label: "Skills",
-    link: "#",
+    link: "skills",
     iconImage: FiTool,
   },
   {
+    label: "About",
+    link: "about",
+    iconImage: FiInfo,
+  },
+  {
     label: "Projects",
-    link: "#",
+    link: "projects",
     iconImage: AiOutlineProject,
   },
   {
-    label: "About",
-    link: "#",
-    iconImage: FiInfo,
+    label: "contact",
+    link: "contact",
+    iconImage: FiPhone,
   },
 ];
 
@@ -83,3 +88,98 @@ export const skillNames: string[] = [
   "google_cloud",
   "linux",
 ];
+export const themes: string[] = [
+  "purple",
+  "amber",
+  "lime",
+  "indigo",
+  "pink",
+  "cyan",
+];
+
+export const ALL_THEMES_PROPS: ThemeOptions = {
+  amber: {
+    bgColorLight: "bg-amber-100",
+    bgColorMedium: "bg-amber-400",
+    bgColorDeep: "bg-amber-800",
+    borderColorLight: "border-amber-100",
+    borderColorMedium: "border-amber-400",
+    borderColorDeep: "border-amber-800",
+    textColorLight: "text-amber-100",
+    textColorMedium: "text-amber-400",
+    textColorDeep: "text-amber-800",
+    fromColor: "from-amber-600/0",
+    viaColor: "via-amber-600/40",
+    toColor: "to-amber-600/0",
+  },
+  purple: {
+    bgColorLight: "bg-purple-100",
+    bgColorMedium: "bg-purple-400",
+    bgColorDeep: "bg-purple-800",
+    borderColorLight: "border-purple-100",
+    borderColorMedium: "border-purple-400",
+    borderColorDeep: "border-purple-800",
+    textColorLight: "text-purple-100",
+    textColorMedium: "text-purple-400",
+    textColorDeep: "text-purple-800",
+    fromColor: "from-purple-600/0",
+    viaColor: "via-purple-600/40",
+    toColor: "to-purple-600/0",
+  },
+  lime: {
+    bgColorLight: "bg-lime-100",
+    bgColorMedium: "bg-lime-400",
+    bgColorDeep: "bg-lime-800",
+    borderColorLight: "border-lime-100",
+    borderColorMedium: "border-lime-400",
+    borderColorDeep: "border-lime-800",
+    textColorLight: "text-lime-100",
+    textColorMedium: "text-lime-400",
+    textColorDeep: "text-lime-800",
+    fromColor: "from-lime-600/0",
+    viaColor: "via-lime-600/40",
+    toColor: "to-lime-600/0",
+  },
+  indigo: {
+    bgColorLight: "bg-indigo-100",
+    bgColorMedium: "bg-indigo-400",
+    bgColorDeep: "bg-indigo-800",
+    borderColorLight: "border-indigo-100",
+    borderColorMedium: "border-indigo-400",
+    borderColorDeep: "border-indigo-800",
+    textColorLight: "text-indigo-100",
+    textColorMedium: "text-indigo-400",
+    textColorDeep: "text-indigo-800",
+    fromColor: "from-indigo-600/0",
+    viaColor: "via-indigo-600/40",
+    toColor: "to-indigo-600/0",
+  },
+  pink: {
+    bgColorLight: "bg-pink-100",
+    bgColorMedium: "bg-pink-400",
+    bgColorDeep: "bg-pink-800",
+    borderColorLight: "border-pink-100",
+    borderColorMedium: "border-pink-400",
+    borderColorDeep: "border-pink-800",
+    textColorLight: "text-pink-100",
+    textColorMedium: "text-pink-400",
+    textColorDeep: "text-pink-800",
+    fromColor: "from-pink-600/0",
+    viaColor: "via-pink-600/40",
+    toColor: "to-pink-600/0",
+  },
+  cyan: {
+    bgColorLight: "bg-cyan-100",
+    bgColorMedium: "bg-cyan-400",
+    bgColorDeep: "bg-cyan-800",
+    borderColorLight: "border-cyan-100",
+    borderColorMedium: "border-cyan-400",
+    borderColorDeep: "border-cyan-800",
+    textColorLight: "text-cyan-100",
+    textColorMedium: "text-cyan-400",
+    textColorDeep: "text-cyan-800",
+    fromColor: "from-cyan-600/0",
+    viaColor: "via-cyan-600/40",
+    toColor: "to-cyan-600/0",
+  },
+};

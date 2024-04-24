@@ -1,9 +1,11 @@
+import { themes } from "@/lib/constants";
 import { z } from "zod";
 
 export const profileSchema = z.object({
   id: z.string().optional(),
   font: z.enum(["font_1", "font_2", "font_3"]).optional(),
-  theme: z.enum(["purple", "amber", "lime", "indigo", "pink"]).optional(),
+  //@ts-ignore
+  theme: z.enum(themes).optional(),
   shortname: z
     .string()
     .min(2, {

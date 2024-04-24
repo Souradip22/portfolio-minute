@@ -10,16 +10,30 @@ import { IoIosArrowDown } from "react-icons/io";
 
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
-import { NavItem } from "@/lib/types";
+import { NavItem, SingleThemeProps, ThemeOptions } from "@/lib/types";
 import { navItems } from "@/lib/constants";
 import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
 
-export default function Navbar({ shortname }: { shortname?: string }) {
+export default function Navbar({
+  shortname,
+  themeProps,
+}: {
+  shortname?: string;
+  themeProps?: SingleThemeProps;
+}) {
   const [isSideMenuOpen, setSideMenu] = useState(false);
+  const [activeRoute, setActiveRoute] = useState("home");
   function openSideMenu() {
     setSideMenu(true);
   }
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setActiveRoute(id);
+  };
 
   let first = shortname;
   let second = "";
@@ -52,21 +66,36 @@ export default function Navbar({ shortname }: { shortname?: string }) {
               <span>
                 {" "}
                 {first}
-                {second && <span className="text-indigo-600">{second}</span>}
+                {second && (
+                  <span className={`${themeProps?.textColorMedium}`}>
+                    {second}
+                  </span>
+                )}
               </span>
             )}{" "}
           </a>
 
           <div className="hidden lg:flex items-center gap-4 transition-all mx-auto">
-            {navItems.map((d, i) => (
-              <Link
+            {navItems.slice(0, 4).map((d, i) => (
+              <span
                 key={i}
-                href={d.link ?? "#"}
-                className="flex items-center gap-4 text-gray-500 dark:text-gray-400 rounded-md bg-gray-50 hover:text-gray-800 hover:bg-gray-100 dark:bg-stone-900 hover:dark:bg-stone-800 hover:dark:text-gray-200 px-3 py-2 active:dark:text-gray-200 cursor-pointer font-bold"
+                onClick={() => scrollToSection(d.link as string)}
+                className={`flex items-center gap-4  rounded-md  hover:text-gray-800  px-3 py-2 cursor-pointer font-semibold
+                ${
+                  activeRoute == d.link
+                    ? "text-gray-700 bg-gray-100 dark:bg-stone-800 dark:text-gray-100"
+                    : "text-gray-500 bg-gray-50  dark:text-gray-400 dark:bg-stone-900 hover:bg-gray-100  hover:dark:bg-stone-800 hover:dark:text-gray-200"
+                }
+                
+                `}
               >
-                {d.iconImage && <d.iconImage className="w-5 h-5" />}
+                {d.iconImage && (
+                  <d.iconImage
+                    className={`w-5 h-5 ${themeProps?.textColorMedium}`}
+                  />
+                )}
                 {d.label}
-              </Link>
+              </span>
             ))}
           </div>
         </div>
@@ -85,7 +114,14 @@ export default function Navbar({ shortname }: { shortname?: string }) {
           className="cursor-pointer text-3xl lg:hidden dark:text-white"
         />
       </div>
-      <MobileNav isSideMenuOpen={isSideMenuOpen} setSideMenu={setSideMenu} />
+      <MobileNav
+        isSideMenuOpen={isSideMenuOpen}
+        setSideMenu={setSideMenu}
+        activeRoute={activeRoute}
+        setActiveRoute={setActiveRoute}
+        scrollToSection={scrollToSection}
+        themeProps={themeProps}
+      />
     </header>
   );
 }
@@ -93,11 +129,20 @@ export default function Navbar({ shortname }: { shortname?: string }) {
 function MobileNav({
   isSideMenuOpen,
   setSideMenu,
+  activeRoute,
+  setActiveRoute,
+  scrollToSection,
+  themeProps,
 }: {
   isSideMenuOpen: any;
   setSideMenu: any;
+  activeRoute?: any;
+  setActiveRoute?: any;
+  scrollToSection?: any;
+  themeProps?: SingleThemeProps;
 }) {
   const router = useRouter();
+
   const className =
     "bg-black w-full max-w-[300px] lg:hidden transition-[margin-right] ease-in-out duration-500 fixed  top-0 bottom-0 right-0 z-40";
   // Append class based on state of sidebar visiblity
@@ -155,12 +200,16 @@ function MobileNav({
               />
             </div>
             <div className=" flex flex-col text-base gap-2 mt-10">
-              {navItems.map((d, i) => (
+              {navItems.slice(0, 4).map((d, i) => (
                 <SingleNavItem
                   key={i}
                   label={d.label}
                   iconImage={d.iconImage}
                   link={d.link}
+                  activeRoute={activeRoute}
+                  setActiveRoute={setActiveRoute}
+                  scrollToSection={scrollToSection}
+                  themeProps={themeProps}
                 >
                   {d.children}
                 </SingleNavItem>
@@ -185,8 +234,18 @@ function MobileNav({
 
 function SingleNavItem(d: NavItem) {
   return (
-    <span className="flex items-center gap-4 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-stone-900 hover:dark:bg-stone-800 dark:text-gray-300 px-4 py-3  cursor-pointer">
-      {d.iconImage && <d.iconImage className="w-4 h-4" />}
+    <span
+      className={`flex items-center gap-4 rounded-md  px-4 py-3  cursor-pointer
+      ${
+        d.activeRoute == d.link
+          ? "text-gray-700 bg-gray-100 dark:bg-stone-800 dark:text-gray-100"
+          : "text-gray-500 bg-gray-50  dark:text-gray-400 dark:bg-stone-900 hover:bg-gray-100  hover:dark:bg-stone-800 hover:dark:text-gray-200"
+      }`}
+      onClick={() => d.scrollToSection(d.link as string)}
+    >
+      {d.iconImage && (
+        <d.iconImage className={`w-5 h-5 ${d.themeProps?.textColorMedium}`} />
+      )}
       {d.label}
     </span>
   );
