@@ -36,14 +36,13 @@ import { skillNames, themes } from "@/lib/constants";
 
 import { socialLinksSVGs } from "./social-links";
 import { CheckIcon } from "@radix-ui/react-icons";
-
-import { toast } from "./ui/use-toast";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { AddEditProjectDialog } from "./AddEditProjectDialog";
 import { AddEduExpDialog } from "./AddEditExpDialog";
 import { getProfile } from "@/lib/fetchers";
 import SubdomainInfo from "./SubdomainInfo";
 import { SignOutButton } from "./AuthButtons";
+import { errorToast, successToast } from "@/lib/customToasts";
 
 const filenames = skillNames;
 
@@ -205,12 +204,16 @@ export default function EditProfileForm({
       });
 
       if (!response.ok) {
+        errorToast({
+          title: "❌  Profile updation failed",
+          description:
+            "Server is not able to handle this request, pls try again later",
+        });
         throw new Error("Failed to create profile");
       }
       const updatedProfileDetails: TSProfileSchema = await response.json();
-      console.log("UPDATED PROFILE==>", updatedProfileDetails);
-      toast({
-        description: "UPDATE Profile",
+      successToast({
+        title: "✅  Profile updated successfully",
       });
     } else {
       try {
@@ -224,6 +227,9 @@ export default function EditProfileForm({
         });
 
         if (!response.ok) {
+          errorToast({
+            title: "❌  Profile creation failed",
+          });
           throw new Error("Failed to create profile");
         }
         const createProfileResponse: any = await response.json();
@@ -233,15 +239,19 @@ export default function EditProfileForm({
         );
         if (createProfileResponse && createProfileResponse.createdProfile) {
           setValue("id", createProfileResponse.createdProfile.id);
-          toast({
-            description: "Create Profile submitted",
-            variant: "destructive",
+
+          successToast({
+            title: "✅  Profile updated successfully",
           });
         }
         if (createProfileResponse && createProfileResponse.error) {
           console.error("somethign went wrong, unabel to create a profile");
         }
       } catch (error) {
+        errorToast({
+          title: "❌  Profile creation failed",
+          description: error,
+        });
         // Handle errors during insertion
         console.error("Error creating profile:", error);
       }
@@ -249,7 +259,35 @@ export default function EditProfileForm({
   }
 
   return (
-    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen">
+    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen pb-[600px]">
+      <div
+        className=" 
+        bg-amber-500 bg-purple-500 bg-lime-500 bg-indigo-500 bg-cyan-500 bg-pink-500
+    bg-amber-100 bg-amber-400 bg-amber-800
+    border-amber-100 border-amber-400 border-amber-800
+    text-amber-100 text-amber-400 text-amber-800
+    from-amber-600/0 via-amber-600/40 to-amber-600/0
+    bg-purple-100 bg-purple-400 bg-purple-800
+    border-purple-100 border-purple-400 border-purple-800
+    text-purple-100 text-purple-400 text-purple-800
+    from-purple-600/0 via-purple-600/40 to-purple-600/0
+    bg-lime-100 bg-lime-400 bg-lime-800
+    border-lime-100 border-lime-400 border-lime-800
+    text-lime-100 text-lime-400 text-lime-800
+    from-lime-600/0 via-lime-600/40 to-lime-600/0
+    bg-indigo-100 bg-indigo-400 bg-indigo-800
+    border-indigo-100 border-indigo-400 border-indigo-800
+    text-indigo-100 text-indigo-400 text-indigo-800
+    from-indigo-600/0 via-indigo-600/40 to-indigo-600/0
+    bg-pink-100 bg-pink-400 bg-pink-800
+    border-pink-100 border-pink-400 border-pink-800
+    text-pink-100 text-pink-400 text-pink-800
+    from-pink-600/0 via-pink-600/40 to-pink-600/0
+    bg-cyan-100 bg-cyan-400 bg-cyan-800
+    border-cyan-100 border-cyan-400 border-cyan-800
+    text-cyan-100 text-cyan-400 text-cyan-800
+    from-cyan-600/0 via-cyan-600/40 to-cyan-600/0"
+      ></div>
       <div className="flex justify-end">
         <SignOutButton />
       </div>
@@ -651,12 +689,14 @@ export default function EditProfileForm({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <button
-            type="submit"
-            className="bg-lime-600 px-3 py-2 font-semibold text-gray-100 rounded"
-          >
-            {form.getValues("id") ? "Update" : "Publish"}
-          </button>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-lime-600 px-3 py-2 font-semibold text-gray-100 rounded"
+            >
+              {form.getValues("id") ? "Update" : "Publish"}
+            </button>
+          </div>
         </form>
       </Form>
     </div>

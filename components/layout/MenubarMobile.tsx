@@ -1,14 +1,20 @@
 import React from "react";
-import { FiMenu as Icon } from "react-icons/fi";
-export default function MenuBarMobile({ setter }: { setter: any }) {
+import { MdClose, MdMenu } from "react-icons/md";
+export default function MenuBarMobile({
+  show,
+  setter,
+}: {
+  show: any;
+  setter: any;
+}) {
   return (
     <button
-      className="md:hidden fixed bottom-4 left-2 text-xl flex text-white rounded-full bg-indigo-600 z-50 p-4"
+      className="md:hidden fixed bottom-[100px] left-2  shadow-lg text-xl flex text-white rounded-md bg-indigo-600 z-50 p-4"
       onClick={() => {
         setter((oldVal: any) => !oldVal);
       }}
     >
-      <Icon />
+      {show ? <MdClose /> : <MdMenu />}
     </button>
   );
 }

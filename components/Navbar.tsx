@@ -217,7 +217,7 @@ function MobileNav({
             </div>
           </div>
           <div>
-            <div className="flex flex-col  gap-8  mt-4 items-center">
+            <div className="flex flex-col  gap-8  mt-4 items-center pb-20">
               <ThemeSwitch text="Change appearance" />
 
               <button className="w-full  max-w-[300px]  rounded-xl border-2 border-neutral-400 px-4 py-2 text-neutral-400 transition-all hover:border-black hover:text-black/90">

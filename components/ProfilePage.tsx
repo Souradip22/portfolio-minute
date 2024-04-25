@@ -80,7 +80,7 @@ export default function ProfilePage({
           <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
             <div className="">
               <h2 className="text-3xl font-semibold text-dark dark:text-gray-200 lg:text-[40px]">
-                Hi This Is{" "}
+                Hi This is{" "}
                 <span className={`${themeProps.textColorMedium}`}>
                   {fullName}
                 </span>{" "}
@@ -415,20 +415,6 @@ export default function ProfilePage({
               )}
             </p>
             <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
-              <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
-                {navItems.slice(0, 5).map((d, i) => (
-                  <li key={i}>
-                    <Link
-                      href={`#${d.link as string}`}
-                      className="text-gray-500 transition hover:opacity-75"
-                    >
-                      {" "}
-                      {d.label}{" "}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
               <ul className="mt-8 flex justify-center gap-6 sm:mt-0 lg:justify-end">
                 {(socialLinks?.length > 5
                   ? socialLinks.slice(0, 5)
@@ -452,6 +438,20 @@ export default function ProfilePage({
                     )
                   );
                 })}
+              </ul>
+              <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
+                built with love
+                {/* {navItems.slice(0, 5).map((d, i) => (
+                  <li key={i}>
+                    <Link
+                      href={`#${d.link as string}`}
+                      className="text-gray-500 transition hover:opacity-75"
+                    >
+                      {" "}
+                      {d.label}{" "}
+                    </Link>
+                  </li>
+                ))} */}
               </ul>
             </div>
           </div>

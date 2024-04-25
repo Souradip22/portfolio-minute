@@ -12,6 +12,8 @@ import circleTextLight from "@/assets/img/circle-text-light.svg";
 import { FaGithub } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { socialLinksSVGs } from "@/components/social-links";
+import { SingleThemeProps } from "@/lib/types";
+import { ALL_THEMES_PROPS } from "@/lib/constants";
 
 export async function generateStaticParams() {
   const allSites = await prisma.site.findMany({
@@ -42,7 +44,7 @@ export default async function SiteHomePage({
 
   if (!data) {
     // notFound();
-    redirect("http://localhost:3000");
+    redirect("https://specialtechnique.in");
   }
   const shortname = profile?.shortname || "";
   const fullName = profile?.fullName;
@@ -59,24 +61,54 @@ export default async function SiteHomePage({
   const theme = profile?.theme;
   const font = profile?.font;
 
-  return (
-    <>
-      <div className="w-full overflow-y-scroll">
-        <div className="mx-auto flex w-full md:w-[70%] flex-col h-screen justify-between gap-4 px-4 ">
-          <div
-            className=" bg-purple-400 bg-indigo-400 bg-amber-400 bg-lime-400 bg-pink-400 text-indigo-600 text-purple-600
-       text-lime-600 text-amber-600 text-pink-600"
-          >
-            <div></div>
-          </div>
-          <Navbar shortname={shortname} />
+  let themeProps: SingleThemeProps = ALL_THEMES_PROPS.amber;
+  if (theme) {
+    themeProps = ALL_THEMES_PROPS[theme];
+  }
 
-          <div className="rounded-2xl bg-white p-6 shadow dark:bg-black dark:shadow-dark lg:col-span-2 lg:p-10">
+  return (
+    <div className="w-full overflow-y-auto">
+      <div className="mx-auto flex flex-col justify-between gap-4 px-4 lg:px-8  h-screen pb-8 pt-4 max-w-5xl">
+        <div
+          className="hidden 
+    bg-amber-100 bg-amber-400 bg-amber-800
+    border-amber-100 border-amber-400 border-amber-800
+    text-amber-100 text-amber-400 text-amber-800
+    from-amber-600/0 via-amber-600/40 to-amber-600/0
+    bg-purple-100 bg-purple-400 bg-purple-800
+    border-purple-100 border-purple-400 border-purple-800
+    text-purple-100 text-purple-400 text-purple-800
+    from-purple-600/0 via-purple-600/40 to-purple-600/0
+    bg-lime-100 bg-lime-400 bg-lime-800
+    border-lime-100 border-lime-400 border-lime-800
+    text-lime-100 text-lime-400 text-lime-800
+    from-lime-600/0 via-lime-600/40 to-lime-600/0
+    bg-indigo-100 bg-indigo-400 bg-indigo-800
+    border-indigo-100 border-indigo-400 border-indigo-800
+    text-indigo-100 text-indigo-400 text-indigo-800
+    from-indigo-600/0 via-indigo-600/40 to-indigo-600/0
+    bg-pink-100 bg-pink-400 bg-pink-800
+    border-pink-100 border-pink-400 border-pink-800
+    text-pink-100 text-pink-400 text-pink-800
+    from-pink-600/0 via-pink-600/40 to-pink-600/0
+    bg-cyan-100 bg-cyan-400 bg-cyan-800
+    border-cyan-100 border-cyan-400 border-cyan-800
+    text-cyan-100 text-cyan-400 text-cyan-800
+    from-cyan-600/0 via-cyan-600/40 to-cyan-600/0"
+        ></div>
+
+        <Navbar shortname={shortname} themeProps={themeProps} />
+
+        <div className="rounded-2xl bg-white p-6 shadow dark:bg-black dark:shadow-dark lg:col-span-2 lg:p-10">
+          <section id="home">
             <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
               <div className="">
                 <h2 className="text-3xl font-semibold text-dark dark:text-gray-200 lg:text-[40px]">
-                  Hi, This Is{" "}
-                  <span className={`text-${theme}-600`}>{fullName}</span> 👋
+                  Hi This is{" "}
+                  <span className={`${themeProps.textColorMedium}`}>
+                    {fullName}
+                  </span>{" "}
+                  👋
                 </h2>
                 <p className="mt-4 text-lg text-muted dark:text-gray-200/70 lg:mt-6 lg:text-2xl">
                   {bio}
@@ -86,12 +118,16 @@ export default async function SiteHomePage({
                 className={
                   !openToWork
                     ? "hidden"
-                    : "flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-purple-100 px-4 py-2 text-center text-base font-medium leading-none text-primary dark:bg-dark-2 lg:text-lg"
+                    : `flex mb-4 items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 py-2 text-center text-base font-medium leading-none dark:bg-dark-2 lg:text-lg  ${themeProps.textColorMedium}  ${themeProps.bgColorLight}`
                 }
               >
                 <span className="relative flex h-2 w-2 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 dark:bg-light"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+                  <span
+                    className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75  ${themeProps.bgColorMedium}`}
+                  ></span>
+                  <span
+                    className={`relative inline-flex h-2 w-2 rounded-full  ${themeProps.bgColorMedium}`}
+                  ></span>
                 </span>
                 <span>Available For Hire</span>
               </div>
@@ -124,7 +160,9 @@ export default async function SiteHomePage({
                   alt=""
                   className="absolute inset-0 hidden h-full w-full animate-spin-slow dark:block"
                 />
-                <div className="grid h-full w-full place-content-center rounded-full bg-primary text-light">
+                <div
+                  className={`grid h-full w-full place-content-center rounded-full ${themeProps.bgColorMedium}`}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 40 40"
@@ -171,7 +209,9 @@ export default async function SiteHomePage({
                       target="_blank"
                       href={item.value}
                     >
-                      <div className="bg-white border border-amber-600 border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2 mt- not-prose px-6 py-3 text-black text-sm transform-gpu transition-transform w-full z-[2]">
+                      <div
+                        className={` border ${themeProps.borderColorMedium}  border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2  px-6 py-3 text-black text-sm transition-transform w-full z-[2] ${themeProps.bgColorLight} `}
+                      >
                         <span className="mx-auto">
                           <p>Download Resume</p>
                         </span>
@@ -182,16 +222,20 @@ export default async function SiteHomePage({
                 );
               })}
             </div>
+          </section>
 
+          <section id="skills">
             <div
-              className={skills && skills.length ? "mt-10 lg:mt-14" : "hidden"}
+              className={
+                skills && skills?.length > 0 ? "mt-10 lg:mt-14" : "hidden"
+              }
             >
               {skills && skills.length > 0 && (
                 <div className="relative flex flex-wrap items-center justify-between gap-6">
                   <span className="relative text-3xl dark:text-gray-200 font-semibold">
                     Skills
                     <span
-                      className={`absolute bottom-0 inset-x-0 h-[40%] bg-${theme}-400 opacity-50`}
+                      className={`absolute bottom-0 inset-x-0 h-[40%] ${themeProps.bgColorMedium} opacity-50`}
                     ></span>
                   </span>
                 </div>
@@ -202,7 +246,7 @@ export default async function SiteHomePage({
                     skills.map((item: any, index: any) => (
                       <button
                         key={`${index}-skill`}
-                        className="bg-gray-100 flex flex-row font-bold gap-3 hover:bg-gray-200 items-center px-4 py-2 rounded-full text-[14px] text-gray-800 hover:-translate-y-1 transform transition duration-800"
+                        className={` flex flex-row font-bold gap-3 hover:bg-gray-200 items-center px-4 py-2 rounded-full text-[14px] text-gray-800 hover:-translate-y-1 transform transition duration-800 bg-gray-50 border-b ${themeProps.borderColorMedium} `}
                       >
                         <Image
                           src={`https://d26c7l40gvbbg2.cloudfront.net/tool_icons/${item.value}.svg`}
@@ -211,8 +255,7 @@ export default async function SiteHomePage({
                           height={16}
                           className=""
                           // onError={(e) => {
-                          //   (e.target as HTMLImageElement).style.display =
-                          //     "none"; // Hide the image if it fails to load
+                          //   (e.target as HTMLImageElement).style.display = "none"; // Hide the image if it fails to load
                           // }}
                         />
                         {item.label}
@@ -221,7 +264,9 @@ export default async function SiteHomePage({
                 </div>
               </div>
             </div>
+          </section>
 
+          <section id="about">
             <div
               className={
                 eduExpValues && eduExpValues?.length > 0
@@ -235,7 +280,9 @@ export default async function SiteHomePage({
                     <div className="relative flex flex-wrap items-center justify-between gap-6">
                       <span className="relative text-3xl dark:text-gray-200 font-semibold">
                         Experience
-                        <span className="absolute bottom-0 inset-x-0 h-[40%] bg-purple-400 opacity-50 "></span>
+                        <span
+                          className={`absolute bottom-0 inset-x-0 h-[40%] ${themeProps.bgColorMedium} opacity-50`}
+                        ></span>
                       </span>
                     </div>
                   )}
@@ -244,10 +291,16 @@ export default async function SiteHomePage({
                       item.type === "company" && (
                         <div
                           key={`${index}-company`}
-                          className="my-4 border-grey-100 border-l-2 border-purple-800 dark:border dark:border-zinc-800 rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
+                          className={`mt-8 border-grey-100 border-l-2  rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] ${themeProps.borderColorMedium}`}
                         >
-                          <span className="absolute w-[80%] -bottom-px right-1-px h-px bg-gradient-to-r from-purple-600/0 via-purple-600/40 to-purple-600/0 dark:from-purple-600/0 dark:via-purple-600/40 dark:to-purple-600/0"></span>
-                          <span className="absolute w-px -right-px h-[40%] bg-gradient-to-b from-purple-600/0 via-purple-600/40 to-purple-600/0 dark:from-purple-600/0 dark:via-purple-600/40 dark:to-purple-600/0"></span>
+                          <span
+                            className={`absolute w-[80%] -bottom-px right-1-px h-px bg-gradient-to-r ${themeProps.fromColor} ${themeProps.viaColor} ${themeProps.toColor} dark:${themeProps.fromColor}dark:${themeProps.viaColor} dark:${themeProps.toColor} `}
+                          ></span>
+
+                          <span
+                            className={`absolute w-px -right-px h-[40%] bg-gradient-to-b ${themeProps.fromColor} ${themeProps.viaColor} ${themeProps.toColor} dark:${themeProps.fromColor}dark:${themeProps.viaColor} dark:${themeProps.toColor} `}
+                          ></span>
+
                           <div className="flex items-center text-gray-900 dark:text-gray-100">
                             <span className="mt-1 text-gray-400 dark:text-gray-400 inline-block line-clamp-1">
                               {item?.fromDate} - {item?.toDate}
@@ -264,11 +317,13 @@ export default async function SiteHomePage({
                   )}
                 </div>
                 <div>
-                  {skills && skills.length > 0 && (
+                  {eduExpValues && eduExpValues.length > 0 && (
                     <div className="relative flex flex-wrap items-center justify-between gap-6">
                       <span className="relative text-3xl dark:text-gray-200 font-semibold">
                         Education
-                        <span className="absolute bottom-0 inset-x-0 h-[40%] bg-purple-400 opacity-50 "></span>
+                        <span
+                          className={`absolute bottom-0 inset-x-0 h-[40%] ${themeProps.bgColorMedium} opacity-50`}
+                        ></span>
                       </span>
                     </div>
                   )}
@@ -277,10 +332,16 @@ export default async function SiteHomePage({
                       item.type === "school" && (
                         <div
                           key={`${index}-school`}
-                          className="my-4 border-grey-100 border-l-2 border-purple-800 dark:border dark:border-zinc-800 rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
+                          className={`mt-8 border-grey-100 border-l-2  rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] ${themeProps.borderColorMedium}`}
                         >
-                          <span className="absolute w-[80%] -bottom-px right-1-px h-px bg-gradient-to-r from-purple-600/0 via-purple-600/40 to-purple-600/0 dark:from-purple-600/0 dark:via-purple-600/40 dark:to-purple-600/0"></span>
-                          <span className="absolute w-px -right-px h-[40%] bg-gradient-to-b from-purple-600/0 via-purple-600/40 to-purple-600/0 dark:from-purple-600/0 dark:via-purple-600/40 dark:to-purple-600/0"></span>
+                          <span
+                            className={`absolute w-[80%] -bottom-px right-1-px h-px bg-gradient-to-r ${themeProps.fromColor} ${themeProps.viaColor} ${themeProps.toColor} dark:${themeProps.fromColor}dark:${themeProps.viaColor} dark:${themeProps.toColor} `}
+                          ></span>
+
+                          <span
+                            className={`absolute w-px -right-px h-[40%] bg-gradient-to-b ${themeProps.fromColor} ${themeProps.viaColor} ${themeProps.toColor} dark:${themeProps.fromColor}dark:${themeProps.viaColor} dark:${themeProps.toColor} `}
+                          ></span>
+
                           <div className="flex items-center text-gray-900 dark:text-gray-100">
                             <span className="mt-1 text-gray-400 dark:text-gray-400 inline-block line-clamp-1">
                               {item?.fromDate} - {item?.toDate}
@@ -298,17 +359,21 @@ export default async function SiteHomePage({
                 </div>
               </div>
             </div>
+          </section>
 
+          <section id="projects">
             <div
               className={
-                projects && projects.length > 0 ? "mt-10 lg:mt-14" : "hidden"
+                projects && projects?.length > 0 ? "mt-10 lg:mt-14" : "hidden"
               }
             >
               {projects && projects.length > 0 && (
                 <div className="relative flex flex-wrap items-center justify-between gap-6">
                   <span className="relative text-3xl dark:text-gray-200 font-semibold">
                     Projects
-                    <span className="absolute bottom-0 inset-x-0 h-[40%] bg-purple-400 opacity-50 "></span>
+                    <span
+                      className={`absolute bottom-0 inset-x-0 h-[40%] ${themeProps.bgColorMedium} opacity-50`}
+                    ></span>
                   </span>
                 </div>
               )}
@@ -317,10 +382,13 @@ export default async function SiteHomePage({
                   {projects &&
                     projects.map((item: any, index: any) => (
                       <div
-                        className="border-grey-100 border-t-4 dark:bg-gray-900 border-purple-600  rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] dark:shadow-2xl dark:shadow-blue-500/20"
+                        className={`border-grey-100 border-t-4  rounded-md p-4 w-full relative shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]  dark:shadow-blue-500/20 ${themeProps.borderColorMedium}`}
                         key={`${index}-project`}
                       >
-                        <span className="absolute w-[80%] -bottom-px right-px h-px bg-gradient-to-r from-purple-500/0 via-purple-500/40 to-purple-500/0 dark:from-purple-400/0 dark:via-purple-400/40 dark:to-purple-400/0"></span>
+                        <span
+                          className={`absolute w-[80%] -bottom-px right-px h-px bg-gradient-to-r  ${themeProps.fromColor} ${themeProps.viaColor} ${themeProps.toColor} dark:${themeProps.fromColor}dark:${themeProps.viaColor} dark:${themeProps.toColor} `}
+                        ></span>
+
                         <div className="flex items-center text-gray-900 dark:text-gray-100">
                           <span className="flex flex-row justify-between text-gray-600 mt-1 w-full text-sm">
                             {item.repositoryUrl && (
@@ -350,139 +418,82 @@ export default async function SiteHomePage({
                 </div>
               </div>
             </div>
-
-            <footer className="">
-              <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-16  lg:pt-24">
-                {/* <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 ">
-                Customise Your Product
-              </h2>
-
-              <p className="mx-auto mt-4 max-w-sm text-gray-500">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-                maiores ipsum eos temporibus ea nihil.
-              </p>
-            </div> */}
-
-                <div className="relative flex flex-wrap items-center justify-center gap-6 text-center">
-                  <span className="relative text-3xl dark:text-gray-200 font-semibold">
-                    Let&apos;s work together
-                    <span
-                      className={`absolute bottom-0 inset-x-0 h-[40%] bg-${theme}-400 opacity-50`}
-                    ></span>
-                  </span>
-                </div>
-                <p className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
-                  {userEmail && (
-                    <>
-                      Drop me a mail at{" "}
-                      <a
-                        href={`mailto:${userEmail}`}
-                        className="border-b border-amber-400 hover:border-b-2"
-                      >
-                        {userEmail}
-                      </a>
-                    </>
-                  )}{" "}
-                  {userEmail && phone && <>or</>}{" "}
-                  {phone && (
-                    <span className="border-b border-amber-400 hover:border-b-2">
-                      call me at {phone}
-                    </span>
-                  )}
-                </p>
-                <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
-                  <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
-                    <li>
-                      <a
-                        href="#"
-                        className="text-gray-500 transition hover:opacity-75"
-                      >
-                        {" "}
-                        Terms & Conditions{" "}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="text-gray-500 transition hover:opacity-75"
-                      >
-                        {" "}
-                        Privacy Policy{" "}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="text-gray-500 transition hover:opacity-75"
-                      >
-                        {" "}
-                        Cookies{" "}
-                      </a>
-                    </li>
-                  </ul>
-
-                  <ul className="mt-8 flex justify-center gap-6 sm:mt-0 lg:justify-end">
-                    {socialLinks?.map((item: any, index: any) => {
-                      return (
-                        item.value !== "" &&
-                        item.label !== "resume" && (
-                          <li key={`${index}-footerSocialLinks`}>
-                            <a
-                              key={`${index}-socialLink`}
-                              target="_blank"
-                              href={item.value}
-                              className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
-                            >
-                              {socialLinksSVGs &&
-                                // @ts-ignore
-                                socialLinksSVGs[item.label]}{" "}
-                            </a>
-                          </li>
-                        )
-                      );
-                    })}
-                  </ul>
-                </div>
+          </section>
+          <footer id="contact">
+            <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-16  lg:pt-24">
+              <div className="relative flex flex-wrap items-center justify-center gap-6 text-center">
+                <span className="relative text-3xl dark:text-gray-200 font-semibold">
+                  Let&apos;s 👋 work together
+                  <span
+                    className={`absolute bottom-0 inset-x-0 h-[40%] ${themeProps.bgColorMedium} opacity-50`}
+                  ></span>
+                </span>
               </div>
-            </footer>
-            {/* <div className="mt-10 lg:mt-14">
-          <div className="group flex gap-6 overflow-hidden rounded-lg bg-light p-6 dark:bg-dark-2">
-            <div className="relative flex min-w-full shrink-0 animate-infinite-scroll gap-6 group-hover:[animation-play-state:paused]">
-              <a
-                href="contact.html"
-                className="relative inline-block whitespace-nowrap text-3xl font-medium text-muted transition before:mr-3 before:content-['\2022'] hover:text-dark dark:text-muted dark:hover:text-white md:text-[40px]"
-              >
-                Let&apos;s 👋 Work Together
-              </a>
-              <a
-                href="contact.html"
-                className="relative inline-block whitespace-nowrap text-3xl font-medium text-muted transition before:mr-3 before:content-['\2022'] hover:text-dark dark:text-muted dark:hover:text-white md:text-[40px]"
-              >
-                Let&apos;s 👋 Work Together
-              </a>
+              <p className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
+                {userEmail && (
+                  <>
+                    Drop me a mail at{" "}
+                    <a
+                      href={`mailto:${userEmail}`}
+                      className={`border-b hover:border-b-2 ${themeProps.borderColorMedium}`}
+                    >
+                      {userEmail}
+                    </a>
+                  </>
+                )}{" "}
+                {userEmail && phone && <>or</>}{" "}
+                {phone && (
+                  <span
+                    className={`border-b hover:border-b-2 ${themeProps.borderColorMedium}`}
+                  >
+                    call me at {phone}
+                  </span>
+                )}
+              </p>
+              <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
+                <ul className="mt-8 flex justify-center gap-6 sm:mt-0 lg:justify-end">
+                  {(socialLinks && socialLinks?.length > 5
+                    ? socialLinks.slice(0, 5)
+                    : socialLinks
+                  )?.map((item: any, index: any) => {
+                    return (
+                      item.value !== "" &&
+                      item.label !== "resume" && (
+                        <li key={`${index}-footerSocialLinks`}>
+                          <a
+                            key={`${index}-socialLink`}
+                            target="_blank"
+                            href={item.value}
+                            className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
+                          >
+                            {socialLinksSVGs &&
+                              // @ts-ignore
+                              socialLinksSVGs[item.label]}{" "}
+                          </a>
+                        </li>
+                      )
+                    );
+                  })}
+                </ul>
+                <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
+                  built with love
+                  {/* {navItems.slice(0, 5).map((d, i) => (
+                  <li key={i}>
+                    <Link
+                      href={`#${d.link as string}`}
+                      className="text-gray-500 transition hover:opacity-75"
+                    >
+                      {" "}
+                      {d.label}{" "}
+                    </Link>
+                  </li>
+                ))} */}
+                </ul>
+              </div>
             </div>
-            <div className="relative flex min-w-full shrink-0 animate-infinite-scroll gap-6 group-hover:[animation-play-state:paused]">
-              <a
-                href="contact.html"
-                className="relative inline-block whitespace-nowrap text-3xl font-medium text-muted transition before:mr-3 before:content-['\2022'] hover:text-dark dark:text-muted dark:hover:text-white md:text-[40px]"
-              >
-                Let&apos;s 👋 Work Together
-              </a>
-              <a
-                href="contact.html"
-                className="relative inline-block whitespace-nowrap text-3xl font-medium text-muted transition before:mr-3 before:content-['\2022'] hover:text-dark dark:text-muted dark:hover:text-white md:text-[40px]"
-              >
-                Let&apos;s 👋 Work Together
-              </a>
-            </div>
-          </div>
-        </div> */}
-          </div>
+          </footer>
         </div>
       </div>
-    </>
+    </div>
   );
 }

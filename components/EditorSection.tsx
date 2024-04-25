@@ -57,7 +57,7 @@ export default function EditorSection() {
     <div className="flex">
       {mounted ? (
         <>
-          <MenuBarMobile setter={setShowSidebar} />
+          <MenuBarMobile show={showSidebar} setter={setShowSidebar} />
           <Sidebar show={showSidebar} setter={setShowSidebar}>
             <EditProfileForm
               profileDetails={profileDetails}
