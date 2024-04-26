@@ -20,11 +20,7 @@ export async function GET(): Promise<void | Response> {
   }
   const userId = session.user.id;
   const userProfile = await getProfile(userId as string);
-  if (userProfile) {
-    return new Response(JSON.stringify(userProfile), { status: 200 });
-  } else {
-    return new Response("Error fetching profile", { status: 500 });
-  }
+  return new Response(JSON.stringify(userProfile));
 }
 
 //Create a profile

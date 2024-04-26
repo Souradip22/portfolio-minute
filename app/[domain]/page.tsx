@@ -14,7 +14,28 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { socialLinksSVGs } from "@/components/social-links";
 import { SingleThemeProps } from "@/lib/types";
 import { ALL_THEMES_PROPS } from "@/lib/constants";
+import FooterBanner from "@/components/FooterBanner";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { domain: string };
+}) {
+  const domain = decodeURIComponent(params.domain);
+
+  const profileData = await getProfileForSite(domain);
+  if (!profileData) {
+    return null;
+  }
+  let title = profileData?.fullName || domain;
+  const description = profileData?.bio;
+  title += " | Portfolio Minute";
+  console.log(title);
+  return {
+    title,
+    description,
+  };
+}
 export async function generateStaticParams() {
   const allSites = await prisma.site.findMany({
     select: {
@@ -118,7 +139,7 @@ export default async function SiteHomePage({
                 className={
                   !openToWork
                     ? "hidden"
-                    : `flex mb-4 items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 py-2 text-center text-base font-medium leading-none dark:bg-dark-2 lg:text-lg  ${themeProps.textColorMedium}  ${themeProps.bgColorLight}`
+                    : `flex mb-4 items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 py-2 text-center text-base font-medium leading-none dark:bg-dark-2 lg:text-lg  ${themeProps.textColorMedium}  bg-gradient-to-r from-stone-800 to-stone-700`
                 }
               >
                 <span className="relative flex h-2 w-2 shrink-0">
@@ -129,7 +150,7 @@ export default async function SiteHomePage({
                     className={`relative inline-flex h-2 w-2 rounded-full  ${themeProps.bgColorMedium}`}
                   ></span>
                 </span>
-                <span>Available For Hire</span>
+                <span>Available To Work</span>
               </div>
             </div>
 
@@ -213,7 +234,7 @@ export default async function SiteHomePage({
                         className={` border ${themeProps.borderColorMedium}  border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2  px-6 py-3 text-black text-sm transition-transform w-full z-[2] ${themeProps.bgColorLight} `}
                       >
                         <span className="mx-auto">
-                          <p>Download Resume</p>
+                          <p>View Resume</p>
                         </span>
                       </div>
                       <div className="absolute h-full w-full bg-gradient-to-r from-indigo-500 to-pink-500 top-2 left-2"></div>
@@ -392,14 +413,14 @@ export default async function SiteHomePage({
                         <div className="flex items-center text-gray-900 dark:text-gray-100">
                           <span className="flex flex-row justify-between text-gray-600 mt-1 w-full text-sm">
                             {item.repositoryUrl && (
-                              <a href={item.repositoryUrl}>
+                              <a href={item.repositoryUrl} target="_blank">
                                 <span className="flex items-center gap-2">
                                   <FaGithub /> Code
                                 </span>
                               </a>
                             )}
                             {item.demoUrl && (
-                              <a href={item.demoUrl}>
+                              <a href={item.demoUrl} target="_blank">
                                 <span className="flex items-center gap-2">
                                   <FaExternalLinkAlt /> Demo
                                 </span>
@@ -420,7 +441,7 @@ export default async function SiteHomePage({
             </div>
           </section>
           <footer id="contact">
-            <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-16  lg:pt-24">
+            <div className="mx-auto  px-4 pb-8 pt-16 lg:pt-24">
               <div className="relative flex flex-wrap items-center justify-center gap-6 text-center">
                 <span className="relative text-3xl dark:text-gray-200 font-semibold">
                   Let&apos;s 👋 work together
@@ -429,7 +450,7 @@ export default async function SiteHomePage({
                   ></span>
                 </span>
               </div>
-              <p className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
+              <div className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
                 {userEmail && (
                   <>
                     Drop me a mail at{" "}
@@ -449,47 +470,32 @@ export default async function SiteHomePage({
                     call me at {phone}
                   </span>
                 )}
-              </p>
-              <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
-                <ul className="mt-8 flex justify-center gap-6 sm:mt-0 lg:justify-end">
-                  {(socialLinks && socialLinks?.length > 5
-                    ? socialLinks.slice(0, 5)
-                    : socialLinks
-                  )?.map((item: any, index: any) => {
-                    return (
-                      item.value !== "" &&
-                      item.label !== "resume" && (
-                        <li key={`${index}-footerSocialLinks`}>
-                          <a
-                            key={`${index}-socialLink`}
-                            target="_blank"
-                            href={item.value}
-                            className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
-                          >
-                            {socialLinksSVGs &&
-                              // @ts-ignore
-                              socialLinksSVGs[item.label]}{" "}
-                          </a>
-                        </li>
-                      )
-                    );
-                  })}
-                </ul>
-                <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
-                  built with love
-                  {/* {navItems.slice(0, 5).map((d, i) => (
-                  <li key={i}>
-                    <Link
-                      href={`#${d.link as string}`}
-                      className="text-gray-500 transition hover:opacity-75"
-                    >
-                      {" "}
-                      {d.label}{" "}
-                    </Link>
-                  </li>
-                ))} */}
+              </div>
+              <div className="mx-auto mt-8  text-center text-lg">
+                <ul className=" flex flex-wrap justify-center gap-6  ">
+                  {socialLinks &&
+                    socialLinks.map((item: any, index: any) => {
+                      return (
+                        item.value !== "" &&
+                        item.label !== "resume" && (
+                          <li key={`${index}-footerSocialLinks`}>
+                            <a
+                              key={`${index}-socialLink`}
+                              target="_blank"
+                              href={item.value}
+                              className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
+                            >
+                              {socialLinksSVGs &&
+                                // @ts-ignore
+                                socialLinksSVGs[item.label]}{" "}
+                            </a>
+                          </li>
+                        )
+                      );
+                    })}
                 </ul>
               </div>
+              <FooterBanner />
             </div>
           </footer>
         </div>

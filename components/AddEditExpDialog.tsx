@@ -16,8 +16,10 @@ import {
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
+
 import { Button } from "./ui/button";
-import { DialogHeader, DialogFooter } from "./ui/dialog";
+import { DialogHeader, DialogFooter, DialogTitle } from "./ui/dialog";
+import { MdEdit } from "react-icons/md";
 
 export function AddEduExpDialog({
   onAddItem,
@@ -55,19 +57,19 @@ export function AddEduExpDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {action == "edit" ? (
-          <FaRegEdit className="w-3 h-3 cursor-pointer" />
+          <MdEdit className="w-3 h-3 cursor-pointer" />
         ) : (
-          <button className="px-3 py-1 rounded-md bg-gray-500 text-gray-50 font-semibold text-xs">
-            Add details
+          <button className="px-3 py-1 rounded-md border border-[#eee2] text-teal-300 font-semibold text-xs mt-1 hover:border-gray-400 hover:text-teal-400">
+            Add more
           </button>
         )}
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogDescription>
-              {action == "edit" ? "Edit details:" : "Enter details:"}
-            </DialogDescription>
+            <DialogTitle>
+              {action == "edit" ? "Edit details" : "Add details"}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 items-center gap-2">
@@ -89,8 +91,11 @@ export function AddEduExpDialog({
                     {Array.from(
                       { length: new Date().getFullYear() + 1 - 1970 },
                       (_, index) => (
-                        <SelectItem key={index} value={`${index + 1970}`}>
-                          {index + 1970}
+                        <SelectItem
+                          key={index}
+                          value={`${new Date().getFullYear() - index}`}
+                        >
+                          {new Date().getFullYear() - index}
                         </SelectItem>
                       )
                     )}
@@ -106,8 +111,11 @@ export function AddEduExpDialog({
                     {Array.from(
                       { length: new Date().getFullYear() + 1 - 1970 },
                       (_, index) => (
-                        <SelectItem key={index} value={`${index + 1970}`}>
-                          {index + 1970}
+                        <SelectItem
+                          key={index}
+                          value={`${new Date().getFullYear() - index}`}
+                        >
+                          {new Date().getFullYear() - index}
                         </SelectItem>
                       )
                     )}
@@ -141,23 +149,31 @@ export function AddEduExpDialog({
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value="school">Education</SelectItem>
-                    <SelectItem value="company">
-                      Professional Experience
-                    </SelectItem>
+                    <SelectItem value="company">Experience</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <p className="text-xs text-gray-500">
+                <span className="text-red-500">*</span>Please select a type
+                under education or professional experience
+              </p>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex justify-center gap-4">
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Close
-              </Button>
+              <button
+                type="button"
+                className="py-2 px-3 text-stone-800 rounded-md text-sm bg-gray-200 max-w-[200px]"
+              >
+                close
+              </button>
             </DialogClose>
-            <Button type="submit" variant={"destructive"}>
-              Save Changes
-            </Button>
+            <button
+              type="submit"
+              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
+            >
+              save
+            </button>
           </DialogFooter>
         </form>
       </DialogContent>

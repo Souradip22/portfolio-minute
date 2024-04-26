@@ -18,6 +18,9 @@ async function validateUsernameFormat(
   if (inpUsername.length < 3) {
     return "Min. 3 characters are required";
   }
+  if (inpUsername.length > 10) {
+    return "Max. 10 characters are required";
+  }
   if (!/^[a-z]+$/.test(inpUsername)) {
     return "Username must contain only lowercase letters (a-z)";
   }

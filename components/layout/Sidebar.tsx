@@ -40,7 +40,6 @@ export default function Sidebar({
     const colorClass =
       router === route ? "text-white" : "text-white/50 hover:text-white";
 
-    console.log(router, route);
     return (
       <Link
         href={route}

@@ -50,7 +50,7 @@ export function AddEditProjectDialog({
         {action == "edit" ? (
           <FaRegEdit className="w-3 h-3 cursor-pointer" />
         ) : (
-          <button className="px-3 py-1 rounded-md bg-gray-500 text-gray-50 font-semibold text-xs">
+          <button className="px-3 py-1 rounded-md border border-[#eee2] text-lime-300 font-semibold text-xs mt-1 hover:border-gray-400 hover:text-lime-400">
             Add project
           </button>
         )}
@@ -58,8 +58,11 @@ export function AddEditProjectDialog({
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Project</DialogTitle>
-            <DialogDescription>Enter project details:</DialogDescription>
+            <DialogTitle>
+              {action == "edit"
+                ? "Edit project details"
+                : "Add project details"}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 items-center gap-2">
@@ -99,15 +102,21 @@ export function AddEditProjectDialog({
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex justify-center gap-4">
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Close
-              </Button>
+              <button
+                type="button"
+                className="py-2 px-3 text-stone-800 rounded-md text-sm bg-gray-200 max-w-[200px]"
+              >
+                close
+              </button>
             </DialogClose>
-            <Button type="submit" variant={"destructive"}>
-              Save Changes
-            </Button>
+            <button
+              type="submit"
+              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
+            >
+              save
+            </button>
           </DialogFooter>
         </form>
       </DialogContent>

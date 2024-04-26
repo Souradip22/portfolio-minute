@@ -15,7 +15,7 @@ export function GoogleSignInButton() {
   return (
     <button
       onClick={handleClick}
-      className="relative z-10 w-full max-w-[400px] flex justify-center rounded-lg bg-[#3887FD] text-white bg-opacity-50 hover:bg-opacity-60 transition py-3 px-6 ring-1 items-center space-x-2"
+      className="relative z-10 w-full max-w-[250px] flex justify-center rounded-lg bg-[#3887FD] text-white bg-opacity-50 hover:bg-opacity-60 transition py-3 px-6 ring-1 items-center space-x-2"
     >
       <Image src={googleLogo} alt="Google Logo" width={20} height={20} />
       <span className="ml-4">Continue with Google</span>
@@ -29,12 +29,20 @@ export function SignOutButton() {
   };
 
   return (
+    // <button
+    //   onClick={handleClick}
+    //   className="relative z-10 w-full max-w-[150px] flex justify-center rounded-lg bg-[#3887FD] text-white bg-opacity-50 hover:bg-opacity-60 transition py-3 px-3 ring-1 items-center space-x-2"
+    // >
+    //   <FaSignOutAlt />
+    //   <span className="ml-4">Sign out</span>
+    // </button>
+
     <button
       onClick={handleClick}
-      className="focus:shadow-outline mt-4 flex px-3 py-2 items-center justify-end rounded-lg border-2  border-purple-800 bg-white  font-semibold text-black transition-colors duration-300 hover:bg-slate-200 my-4 gap-2"
+      className="flex px-3 py-2 text-xs rounded-md justify-center items-center text-gray-200 bg-transparent border border-[#eee2] border-b border-b-cyan-400 hover:text-gray-50 hover:border-b-cyan-500 gap-2 my-2"
     >
       <FaSignOutAlt />
-      Signout
+      <span>Sign out</span>
     </button>
   );
 }

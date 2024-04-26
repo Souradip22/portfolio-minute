@@ -20,23 +20,18 @@ export default async function Home() {
           particleColor="#FFFFFF"
         />
       </div>
-      {/* <div className="relative z-20">
-        <h1 className="md:text-7xl text-3xl lg:text-6xl font-bold text-center  text-white ">
-          Create your ptofile under one minute
-        </h1>
-        <div className="">
-          {session ? <SignOutButton /> : <GoogleSignInButton />}
-        </div>
-      </div> */}
 
-      <div className="pt-10 pb-10 md:pb-24 px-8 relative z-40 h-[800px]">
+      <div className="pt-6 px-8 relative z-40 ">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          <div className="z-50" style={{ opacity: 1 }}>
-            <a
+          <div className="z-50" style={{ opacity: "1" }}>
+            {/* <a
               className="w-full flex items-center gap-2 mb-[40px] md:mb-[60px] group cursor-pointer md:border-none border border-solid border-[#eee2] p-1.5 rounded-full"
               href="/cpp"
             >
-              {/* <div className="flex gap-1 items-center">
+              <div className="bg-teal-900 text-teal-300 px-2.5 py-0.5 rounded-full text-sm">
+                New
+              </div>
+              <div className="flex gap-1 items-center">
                 <div className="text-white text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 md:hidden block">
                   Copilot++ Launch
                 </div>
@@ -60,36 +55,49 @@ export default async function Home() {
                     clipRule="evenodd"
                   ></path>
                 </svg>
-              </div> */}
-            </a>
+              </div>
+            </a> */}
           </div>
           <div className="z-50" style={{ opacity: 1 }}>
             <div>
-              <h1 className=" text-white text-center text-3xl md:text-6xl mb-4 font-bold">
-                Make your own portfolio
+              <h1
+                className="text-center text-3xl md:text-6xl mb-4 font-bold"
+                style={{
+                  background: "linear-gradient(45deg, #00fbff, #FF4500)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Craft Your Stunning Portfolio in Just One Minute!
               </h1>
-            </div>
-            <div>
               <div className="text-center font-medium text-base md:text-lg text-[#FFFFFF]/[.48] mb-8">
-                Build software faster in an editor designed for pair-programming
-                with AI
+                Create Your Online Portfolio Fast: Input Details, Get Subdomain,
+                Share!{" "}
+                <span className="opacity-1 shadow-md shadow-cyan-400">
+                  Edit Anytime!
+                </span>
+                <br />
               </div>
             </div>
             <div className="w-full">
               <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-20 w-full relative z-40">
                 {session ? (
-                  <Link
-                    href={"/dashboard"}
-                    className="group md:w-fit group w-fit flex justify-center relative rounded-full p-px text-[0.8125rem] font-semibold leading-6 shadow-xl shadow-zinc-950 text-white"
-                  >
-                    <span className="absolute inset-0 overflow-hidden rounded-lg">
-                      <span className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-                    </span>
-                    <div className="relative z-10 w-full flex justify-center rounded-lg bg-[#3887FD] bg-opacity-50 hover:bg-opacity-60 transition py-3 px-6 ring-1 items-center space-x-2">
-                      <span>Dashboard</span>
-                    </div>
-                    <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 opacity-20 group-hover:opacity-80"></span>
-                  </Link>
+                  <>
+                    <Link
+                      href={"/dashboard"}
+                      className="group md:w-fit group w-fit flex justify-center relative rounded-full p-px text-[0.8125rem] font-semibold leading-6 shadow-xl shadow-zinc-950 text-white"
+                    >
+                      <span className="absolute inset-0 overflow-hidden rounded-lg">
+                        <span className="absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                      </span>
+                      <div className="relative z-10 w-full flex justify-center rounded-lg bg-[#3887FD] bg-opacity-50 hover:bg-opacity-60 transition py-3 px-6 ring-1 items-center space-x-2">
+                        <span>Dashboard</span>
+                      </div>
+                      <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 opacity-20 group-hover:opacity-80"></span>
+                    </Link>
+
+                    <SignOutButton />
+                  </>
                 ) : (
                   <GoogleSignInButton />
                 )}
@@ -97,15 +105,15 @@ export default async function Home() {
             </div>
           </div>
           <div
-            className="user-select-none user-drag-none w-full opacity-100 position: relative "
+            className="user-select-none user-drag-none w-full opacity-100 relative "
             style={{ transform: "none" }}
           >
             <video
               controls
               autoPlay
-              width={800}
-              height={600}
-              className="border-2 border-purple-500 shadow-[0_10px_20px_rgba(240,_46,_170,_0.7)] rounded-md"
+              width={600}
+              height={400}
+              className="border-2 border-cyan-500 shadow-[0_10px_20px_rgba(46,_228,_240,_0.7)] rounded-md z-20 overflow-hidden border-zinc-600/40 ThreeD mx-auto"
             >
               <source src="/intro.webm" type="video/webm" />
               Your browser does not support the video tag.

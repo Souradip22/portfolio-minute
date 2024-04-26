@@ -16,6 +16,7 @@ import { profileFormDefaultValues } from "@/lib/defaultValues";
 import { SingleThemeProps, ThemeOptions } from "@/lib/types";
 import { ALL_THEMES_PROPS, navItems } from "@/lib/constants";
 import Link from "next/link";
+import FooterBanner from "./FooterBanner";
 
 export default function ProfilePage({
   profileDetails,
@@ -94,7 +95,7 @@ export default function ProfilePage({
               className={
                 !openToWork
                   ? "hidden"
-                  : `flex mb-4 items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 py-2 text-center text-base font-medium leading-none dark:bg-dark-2 lg:text-lg  ${themeProps.textColorMedium}  ${themeProps.bgColorLight}`
+                  : `flex mb-4 items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 py-2 text-center text-base font-medium leading-none dark:bg-dark-2 lg:text-lg  ${themeProps.textColorMedium}  bg-gradient-to-r from-stone-800 to-stone-700`
               }
             >
               <span className="relative flex h-2 w-2 shrink-0">
@@ -105,7 +106,7 @@ export default function ProfilePage({
                   className={`relative inline-flex h-2 w-2 rounded-full  ${themeProps.bgColorMedium}`}
                 ></span>
               </span>
-              <span>Available For Hire</span>
+              <span>Available To Work</span>
             </div>
           </div>
 
@@ -189,7 +190,7 @@ export default function ProfilePage({
                       className={` border ${themeProps.borderColorMedium}  border-dashed flex group-active:border-alpha h-full hover:translate-x-2 hover:translate-y-2  px-6 py-3 text-black text-sm transition-transform w-full z-[2] ${themeProps.bgColorLight} `}
                     >
                       <span className="mx-auto">
-                        <p>Download Resume</p>
+                        <p>View Resume</p>
                       </span>
                     </div>
                     <div className="absolute h-full w-full bg-gradient-to-r from-indigo-500 to-pink-500 top-2 left-2"></div>
@@ -356,14 +357,14 @@ export default function ProfilePage({
                       <div className="flex items-center text-gray-900 dark:text-gray-100">
                         <span className="flex flex-row justify-between text-gray-600 mt-1 w-full text-sm">
                           {item.repositoryUrl && (
-                            <a href={item.repositoryUrl}>
+                            <a href={item.repositoryUrl} target="_blank">
                               <span className="flex items-center gap-2">
                                 <FaGithub /> Code
                               </span>
                             </a>
                           )}
                           {item.demoUrl && (
-                            <a href={item.demoUrl}>
+                            <a href={item.demoUrl} target="_blank">
                               <span className="flex items-center gap-2">
                                 <FaExternalLinkAlt /> Demo
                               </span>
@@ -393,7 +394,7 @@ export default function ProfilePage({
                 ></span>
               </span>
             </div>
-            <p className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
+            <div className="mx-auto mt-4  text-gray-900 dark:text-gray-200 text-center text-lg">
               {userEmail && (
                 <>
                   Drop me a mail at{" "}
@@ -413,47 +414,32 @@ export default function ProfilePage({
                   call me at {phone}
                 </span>
               )}
-            </p>
-            <div className="mt-16 border-t border-gray-100 pt-8 sm:flex sm:items-center sm:justify-between">
-              <ul className="mt-8 flex justify-center gap-6 sm:mt-0 lg:justify-end">
-                {(socialLinks?.length > 5
-                  ? socialLinks.slice(0, 5)
-                  : socialLinks
-                )?.map((item: any, index: any) => {
-                  return (
-                    item.value !== "" &&
-                    item.label !== "resume" && (
-                      <li key={`${index}-footerSocialLinks`}>
-                        <a
-                          key={`${index}-socialLink`}
-                          target="_blank"
-                          href={item.value}
-                          className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
-                        >
-                          {socialLinksSVGs &&
-                            // @ts-ignore
-                            socialLinksSVGs[item.label]}{" "}
-                        </a>
-                      </li>
-                    )
-                  );
-                })}
-              </ul>
-              <ul className="flex flex-wrap justify-center gap-4 text-xs lg:justify-end">
-                built with love
-                {/* {navItems.slice(0, 5).map((d, i) => (
-                  <li key={i}>
-                    <Link
-                      href={`#${d.link as string}`}
-                      className="text-gray-500 transition hover:opacity-75"
-                    >
-                      {" "}
-                      {d.label}{" "}
-                    </Link>
-                  </li>
-                ))} */}
+            </div>
+            <div className="mx-auto mt-8  text-center text-lg">
+              <ul className=" flex flex-wrap justify-center gap-6  ">
+                {socialLinks &&
+                  socialLinks.map((item: any, index: any) => {
+                    return (
+                      item.value !== "" &&
+                      item.label !== "resume" && (
+                        <li key={`${index}-footerSocialLinks`}>
+                          <a
+                            key={`${index}-socialLink`}
+                            target="_blank"
+                            href={item.value}
+                            className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center"
+                          >
+                            {socialLinksSVGs &&
+                              // @ts-ignore
+                              socialLinksSVGs[item.label]}{" "}
+                          </a>
+                        </li>
+                      )
+                    );
+                  })}
               </ul>
             </div>
+            <FooterBanner />
           </div>
         </footer>
       </div>

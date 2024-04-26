@@ -8,7 +8,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 
-import { FiMenu } from "react-icons/fi";
+import { FiMenu, FiPhone, FiPhoneCall } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
 import { NavItem, SingleThemeProps, ThemeOptions } from "@/lib/types";
 import { navItems } from "@/lib/constants";
@@ -104,8 +104,11 @@ export default function Navbar({
         <div className=" hidden lg:flex   items-center gap-4 ">
           <ThemeSwitch />
 
-          <button className="rounded-md border border-neutral-400 px-4 py-2  transition-all hover:border-black hover:text-black/90 dark:bg-gray-100 dark:hover:bg-gray-900 dark:hover:text-white">
-            Let Chat
+          <button
+            className=" flex gap-2 items-center px-3 py-2 rounded-md text-white transition duration-150 ease-in-out btn bg-gradient-to-r from-stone-800 to-stone-700 hover:from-stone-700 hover:to-stone-700 group"
+            onClick={() => scrollToSection("contact")}
+          >
+            Contact <FiPhone className={themeProps?.textColorMedium} />
           </button>
         </div>
 
@@ -219,9 +222,11 @@ function MobileNav({
           <div>
             <div className="flex flex-col  gap-8  mt-4 items-center pb-20">
               <ThemeSwitch text="Change appearance" />
-
-              <button className="w-full  max-w-[300px]  rounded-xl border-2 border-neutral-400 px-4 py-2 text-neutral-400 transition-all hover:border-black hover:text-black/90">
-                Register
+              <button
+                className=" flex gap-2 items-center px-3 py-2 rounded-md text-white transition duration-150 ease-in-out btn bg-gradient-to-r from-stone-800 to-stone-700 hover:from-stone-700 hover:to-stone-700 group"
+                onClick={() => scrollToSection("contact")}
+              >
+                Lets connect <FiPhone className={themeProps?.textColorMedium} />
               </button>
             </div>
           </div>

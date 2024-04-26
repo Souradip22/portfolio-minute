@@ -209,6 +209,11 @@ html.dark {
 .animate-ping {
   animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+.ThreeD {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-8deg) rotateZ(2deg);
+}
+
 /* 
   .bg-primary {
     background-color: blue;

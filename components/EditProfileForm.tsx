@@ -43,6 +43,8 @@ import { getProfile } from "@/lib/fetchers";
 import SubdomainInfo from "./SubdomainInfo";
 import { SignOutButton } from "./AuthButtons";
 import { errorToast, successToast } from "@/lib/customToasts";
+import { MdClose, MdEdit } from "react-icons/md";
+import CustomButton from "./CustomButton";
 
 const filenames = skillNames;
 
@@ -131,6 +133,10 @@ export default function EditProfileForm({
   const fontValue = watch("font");
 
   const id = watch("id");
+
+  const profilePresent = form.getValues("id");
+
+  const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     // if (formState.isDirty) {
     //   const updatedProfileDetails = {
@@ -193,31 +199,38 @@ export default function EditProfileForm({
   ]);
 
   async function onSubmit(data: TSProfileSchema) {
-    console.log("Form Submission", data);
+    setLoading(true);
     if (data.id) {
-      const response = await fetch("/api/profile", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        errorToast({
-          title: "❌  Profile updation failed",
-          description:
-            "Server is not able to handle this request, pls try again later",
+      try {
+        const response = await fetch("/api/profile", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         });
-        throw new Error("Failed to create profile");
+        const updatedProfileDetails: any = await response.json();
+        setLoading(false);
+        if (updatedProfileDetails && updatedProfileDetails.error) {
+          errorToast({
+            title: "❌  failed to update profile",
+            description: updatedProfileDetails.error,
+          });
+          throw new Error("Failed to update profile");
+        }
+        successToast({
+          title: "✅  Profile updated successfully",
+        });
+      } catch (error) {
+        errorToast({
+          title: "❌  failed to update profile",
+          description: error,
+        });
+        // Handle errors during insertion
+        console.error("Error creating profile:", error);
       }
-      const updatedProfileDetails: TSProfileSchema = await response.json();
-      successToast({
-        title: "✅  Profile updated successfully",
-      });
     } else {
       try {
-        // Make your second request to insert the username into the database
         const response = await fetch("/api/profile", {
           method: "POST",
           headers: {
@@ -225,29 +238,28 @@ export default function EditProfileForm({
           },
           body: JSON.stringify(data),
         });
-
-        if (!response.ok) {
+        const createProfileResponse: any = await response.json();
+        setLoading(false);
+        if (createProfileResponse && createProfileResponse.error) {
           errorToast({
             title: "❌  Profile creation failed",
+            description: createProfileResponse.error,
           });
           throw new Error("Failed to create profile");
         }
-        const createProfileResponse: any = await response.json();
-        console.log(
-          "createProfileResponse id ",
-          createProfileResponse.createdProfile.id
-        );
+
         if (createProfileResponse && createProfileResponse.createdProfile) {
           setValue("id", createProfileResponse.createdProfile.id);
-
           successToast({
-            title: "✅  Profile updated successfully",
+            title: "✅  Profile created successfully",
+          });
+        } else {
+          errorToast({
+            title: "❌  Profile creation failed",
           });
         }
-        if (createProfileResponse && createProfileResponse.error) {
-          console.error("somethign went wrong, unabel to create a profile");
-        }
       } catch (error) {
+        setLoading(false);
         errorToast({
           title: "❌  Profile creation failed",
           description: error,
@@ -259,7 +271,7 @@ export default function EditProfileForm({
   }
 
   return (
-    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen pb-[600px]">
+    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen pb-[300px]">
       <div
         className=" 
         bg-amber-500 bg-purple-500 bg-lime-500 bg-indigo-500 bg-cyan-500 bg-pink-500
@@ -292,7 +304,9 @@ export default function EditProfileForm({
         <SignOutButton />
       </div>
 
-      {username && <SubdomainInfo text={username} />}
+      {username && (
+        <SubdomainInfo text={username} profilePresent={profilePresent} />
+      )}
 
       <Form {...form}>
         <form
@@ -399,8 +413,9 @@ export default function EditProfileForm({
                         <Input placeholder="short name" {...field} />
                       </FormControl>
                       <FormDescription>
-                        This will be used as logo. Keep a space to get different
-                        colors
+                        <span className="text-red-500">*</span>Shortname will
+                        appear in the navbar as logo. Add space between
+                        characters for a color combination.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -562,7 +577,9 @@ export default function EditProfileForm({
                             </FormControl>
                             {socialLinksField[index].label == "resume" && (
                               <FormDescription>
-                                Fill this to get download resume button
+                                <span className="text-red-500">*</span>Please
+                                provide a Google Drive link for your resume to
+                                enable the {"View Resume"} button in the UI.
                               </FormDescription>
                             )}
 
@@ -604,6 +621,11 @@ export default function EditProfileForm({
             <AccordionItem value="educationWithExperiences">
               <AccordionTrigger>Education and experience</AccordionTrigger>
               <AccordionContent>
+                <p className="text-gray-400 mb-2 ml-1 text-xs">
+                  <span className="text-red-500">*</span>Arrange your experience
+                  and education in reverse chronological order to ensure they
+                  appear correctly in the UI.
+                </p>
                 <div>
                   {eduExpFields.map((field: any, index: number) => (
                     <div key={field.id}>
@@ -611,34 +633,28 @@ export default function EditProfileForm({
                         control={form.control}
                         name={`educationWithExperiences.${index}.orgName`}
                         render={({ field }) => (
-                          <div className="inline-block w-full">
-                            <p className="bg-amber-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
-                              {field.value} (
-                              {getValues(
-                                `educationWithExperiences.${index}.fromDate`
-                              )}
-                              -
-                              {getValues(
-                                `educationWithExperiences.${index}.toDate`
-                              )}
-                              )
-                              <span className="flex items-center justify-end gap-1">
-                                <AddEduExpDialog
-                                  onAddItem={appendEduExp}
-                                  passedValues={getValues(
-                                    `educationWithExperiences.${index}`
-                                  )}
-                                  action="edit"
-                                  index={index}
-                                  onEditItem={updateEduExp}
-                                />
-                                <IoClose
-                                  className="w-4 h-4 cursor-pointer"
-                                  onClick={() => removeEduExp(index)}
-                                />
-                              </span>
-                            </p>
-                          </div>
+                          <span className="w-full flex items-center gap-2 mb-[4px] group  border border-solid border-[#eee2] p-1.5 rounded-md justify-between">
+                            <div className="flex gap-1 items-center">
+                              <div className="text-white ml-1 text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 block">
+                                {field.value}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-teal-300 px-2.5 py-0.5 rounded-full text-sm">
+                              <AddEduExpDialog
+                                onAddItem={appendEduExp}
+                                passedValues={getValues(
+                                  `educationWithExperiences.${index}`
+                                )}
+                                action="edit"
+                                index={index}
+                                onEditItem={updateEduExp}
+                              />
+                              <MdClose
+                                className="w-4 h-4 cursor-pointer"
+                                onClick={() => removeEduExp(index)}
+                              />
+                            </div>
+                          </span>
                         )}
                       />
                     </div>
@@ -659,26 +675,26 @@ export default function EditProfileForm({
                         control={form.control}
                         name={`projects.${index}.projectName`}
                         render={({ field }) => (
-                          <div className="inline-block w-full">
-                            <p className="bg-purple-400 mb-1 text-white text-xs  p-2 capitalize rounded-lg flex justify-between items-center gap-2.5">
-                              {/*  */}
-                              {field.value}
-
-                              <span className="flex items-center justify-end gap-1">
-                                <AddEditProjectDialog
-                                  onAddProject={appendProject}
-                                  passedValues={getValues(`projects.${index}`)}
-                                  action="edit"
-                                  index={index}
-                                  onEditProject={updateProject}
-                                />
-                                <IoClose
-                                  className="w-4 h-4 cursor-pointer"
-                                  onClick={() => removeProject(index)}
-                                />
-                              </span>
-                            </p>
-                          </div>
+                          <span className="w-full flex items-center gap-2 mb-[4px] group  border border-solid border-[#eee2] p-1.5 rounded-md justify-between">
+                            <div className="flex gap-1 items-center">
+                              <div className="text-white ml-1 text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 block">
+                                {field.value}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-lime-300 px-2.5 py-0.5 rounded-full text-sm">
+                              <AddEditProjectDialog
+                                onAddProject={appendProject}
+                                passedValues={getValues(`projects.${index}`)}
+                                action="edit"
+                                index={index}
+                                onEditProject={updateProject}
+                              />
+                              <MdClose
+                                className="w-4 h-4 cursor-pointer"
+                                onClick={() => removeProject(index)}
+                              />
+                            </div>
+                          </span>
                         )}
                       />
                     </div>
@@ -689,13 +705,13 @@ export default function EditProfileForm({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-lime-600 px-3 py-2 font-semibold text-gray-100 rounded"
-            >
-              {form.getValues("id") ? "Update" : "Publish"}
-            </button>
+            {profilePresent ? (
+              <CustomButton title={"Update"} isLoading={isLoading} />
+            ) : (
+              <CustomButton title={"Save"} isLoading={isLoading} />
+            )}
           </div>
         </form>
       </Form>
