@@ -3,15 +3,15 @@ import { z } from "zod";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 export const profileFormDefaultValues: Partial<TSProfileSchema> = {
-  theme: "purple",
+  theme: "lime",
   font: "font_1",
-  shortname: "COOL",
+  shortname: "S Chandra",
   fullName: "Souradip Chandra",
   bio: "Versatile full-stack engineer proficient in both front-end and back-end development, adept at crafting seamless and intuitive user experiences. 💻🎨",
   experience: "5",
   completedProjects: "10",
   isOpenToWork: true,
-  userEmail: "souradip000@gmail.com",
+  userEmail: "souradip.chandra97@gmail.com",
   phone: "+91 7318757426",
   socialLinks: [
     { value: "https://github.com/Souradip22", label: "github" },
@@ -29,36 +29,124 @@ export const profileFormDefaultValues: Partial<TSProfileSchema> = {
     { value: "", label: "figma" },
   ],
   skills: [
-    { label: "Nextjs", value: "nextjs" },
-    { label: "React", value: "reactjs" },
+    {
+      label: "Nextjs",
+      value: "nextjs",
+    },
+    {
+      label: "React",
+      value: "reactjs",
+    },
+    {
+      label: "Typescript",
+      value: "typescript",
+    },
+    {
+      label: "Css",
+      value: "css",
+    },
+    {
+      label: "Python",
+      value: "python",
+    },
+    {
+      label: "Java",
+      value: "java",
+    },
+    {
+      label: "Nodejs",
+      value: "nodejs",
+    },
+    {
+      label: "Mongodb",
+      value: "mongodb",
+    },
+    {
+      label: "Tailwindcss",
+      value: "tailwindcss",
+    },
+    {
+      label: "Django",
+      value: "django",
+    },
+    {
+      label: "Git",
+      value: "git",
+    },
+    {
+      label: "Google Cloud",
+      value: "google_cloud",
+    },
+    {
+      label: "Sql",
+      value: "sql",
+    },
+    {
+      label: "Kafka",
+      value: "kafka",
+    },
+    {
+      label: "Vs Code",
+      value: "vs_code",
+    },
+    {
+      label: "Atom",
+      value: "atom",
+    },
+    {
+      label: "Mysql",
+      value: "mysql",
+    },
   ],
   projects: [
     {
-      projectName: "Project 1",
+      projectName: "shadcn/ui",
       projectDescription:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, exercitationem.",
+        "This is just an example/placeholder. I have used many components from here to make this website",
       repositoryUrl: "https://shadcn.com",
-      demoUrl: "http://twitter.com/shadcn",
+      demoUrl: "https://github.com/shadcn-ui/ui",
     },
     {
-      projectName: "Project 2",
+      projectName: "Vercel",
       projectDescription:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, exercitationem.",
-      repositoryUrl: "https://shadcn.com",
-      demoUrl: "http://twitter.com/shadcn",
+        "This website is hosted on Vercel. That too for free. Can you believe it?",
+      repositoryUrl: "https://github.com/vercel/vercel",
+      demoUrl: "https://vercel.com",
+    },
+    {
+      projectName: "Tailwind",
+      projectDescription:
+        "A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.",
+      repositoryUrl: "",
+      demoUrl: "https://tailwindcss.com/",
+    },
+    {
+      projectName: "My own portfolio",
+      projectDescription:
+        "I have a resources section under my own portfolio website, do check that out.",
+      repositoryUrl: "",
+      demoUrl: "https://souradip.ch",
     },
   ],
   educationWithExperiences: [
     {
-      orgName: "Bankura Zilla School",
+      orgName: "Academy of Technology",
       fromDate: "2014",
-      toDate: "2012",
+      toDate: "2018",
       location: "West Bengal, India.",
-      designation: "Higher Secondary School",
+      designation: "Engineering",
       type: "school", // Corrected type
     },
     {
-      orgName: "Wipro",
+      orgName: "Dassault Systemes",
+      fromDate: "2021",
+      toDate: "2023",
+      location: "Bangalore, India.",
+      designation: "R&D Specialist",
+      type: "company", // Corrected type
+    },
+    {
+      orgName: "Wipro Digital",
       fromDate: "2018",
       toDate: "2021",
       location: "Bangalore, India.",

@@ -19,9 +19,21 @@ export const viewport: Viewport = {
 
 const epilogue = Epilogue({ subsets: ["latin"] });
 
+const title =
+  "Portfolio Minute – Craft Your Stunning Portfolio in Just One Minute!";
+const description =
+  "Portfolio Minute is your ultimate tool for unleashing creativity and efficiency, enabling you to effortlessly construct a visually striking portfolio in just 60 seconds. Say goodbye to hours of tedious work and hello to a showcase that dazzles and impresses with ease.";
+const image = "https://portfoliominute.in/thumbnail.png";
+
 export const metadata: Metadata = {
-  title: "Portfolio Minute",
-  description: "Souradip",
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    images: [image],
+  },
+  metadataBase: new URL("https://portfoliominute.in"),
 };
 
 export default function RootLayout({

@@ -32,7 +32,6 @@ export async function getUser(inpEmail: string) {
       },
     });
 
-    // console.dir(response, { depth: null });
     return response;
   } catch (error: any) {
     return {

@@ -14,6 +14,7 @@ import { NavItem, SingleThemeProps, ThemeOptions } from "@/lib/types";
 import { navItems } from "@/lib/constants";
 import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
+import logo from "@/public/logo/logo-no-background.svg";
 
 export default function Navbar({
   shortname,
@@ -47,21 +48,15 @@ export default function Navbar({
         {/* left side  */}
         <div className="flex items-center gap-10 w-5/6">
           {/* logo */}
-          <a
-            href="index.html"
-            className="inline-flex items-center gap-3 px-3 text-2xl font-semibold text-dark dark:text-white"
+          <button
+            onClick={() => scrollToSection("home")}
+            className="inline-flex items-center gap-1 px-3 text-2xl font-semibold text-dark dark:text-white"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="h-6 w-6"
-            >
-              <path
-                fill="currentColor"
-                d="M0 1.5A1.5 1.5 0 0 1 1.5 0H9a1.5 1.5 0 0 1 1.5 1.5v21A1.5 1.5 0 0 1 9 24H1.5A1.5 1.5 0 0 1 0 22.5v-21Zm13.5 0A1.5 1.5 0 0 1 15 0h7.5A1.5 1.5 0 0 1 24 1.5V9a1.5 1.5 0 0 1-1.5 1.5H15A1.5 1.5 0 0 1 13.5 9V1.5Zm0 13.5a1.5 1.5 0 0 1 1.5-1.5h7.5A1.5 1.5 0 0 1 24 15v7.5a1.5 1.5 0 0 1-1.5 1.5H15a1.5 1.5 0 0 1-1.5-1.5V15Z"
-              ></path>
-            </svg>
+            <Image
+              src={logo}
+              alt="portfolio minute logo"
+              className="h-10 w-10"
+            />
             {first && (
               <span>
                 {" "}
@@ -73,7 +68,7 @@ export default function Navbar({
                 )}
               </span>
             )}{" "}
-          </a>
+          </button>
 
           <div className="hidden lg:flex items-center gap-4 transition-all mx-auto">
             {navItems.slice(0, 4).map((d, i) => (
@@ -165,7 +160,6 @@ function MobileNav({
     const colorClass =
       router === route ? "text-white" : "text-white/50 hover:text-white";
 
-    // console.log(router, route);
     return (
       <Link
         href={route}
@@ -194,7 +188,14 @@ function MobileNav({
       <div className={`${className}${appendClass}`}>
         <div className="w-full max-w-[300px] text-base font-medium transition-all  ease-linear h-full duration-500 bg-white dark:bg-gray-950 px-6 py-10 shadow-2xl shadow-blue-500/20 flex flex-col justify-between ">
           <div>
-            <div className="flex justify-end dark:text-white">
+            <div className="flex justify-between dark:text-white">
+              <span className="flex gap-2 items-center">
+                <Image
+                  src={logo}
+                  alt="portfolio minute logo"
+                  className="h-10 w-10"
+                />
+              </span>
               <AiOutlineClose
                 onClick={() => {
                   setSideMenu((oldVal: any) => !oldVal);

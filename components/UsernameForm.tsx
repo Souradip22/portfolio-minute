@@ -105,10 +105,12 @@ export function UsernameForm({
                   <li>
                     Your profile will be visible at{" "}
                     <code className="border-b border-amber-300">
-                      {inpUsername ? inpUsername : "<username>"}.portfoliomin.in
+                      {inpUsername ? inpUsername : "<username>"}
+                      .portfoliominute.in
                     </code>
                     , so keep it short.
                   </li>
+                  <li className="text-red-400">You cannot change this later</li>
                 </ul>
               </FormDescription>
               <FormMessage>{message}</FormMessage>

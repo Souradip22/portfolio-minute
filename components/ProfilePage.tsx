@@ -81,7 +81,7 @@ export default function ProfilePage({
           <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
             <div className="">
               <h2 className="text-3xl font-semibold text-dark dark:text-gray-200 lg:text-[40px]">
-                Hi This is{" "}
+                Hi, This is{" "}
                 <span className={`${themeProps.textColorMedium}`}>
                   {fullName}
                 </span>{" "}

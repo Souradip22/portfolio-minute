@@ -12,7 +12,7 @@ const SubdomainInfo = ({
   profilePresent: any;
 }) => {
   const [isCopied, setIsCopied] = useState(false);
-  const siteUrl = `${text}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`;
+  const siteUrl = `${text}.portfoliominute.in`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(siteUrl);
@@ -20,7 +20,7 @@ const SubdomainInfo = ({
     setTimeout(() => setIsCopied(false), 2000); // Reset copied status after 2 seconds
   };
   let buttonCls =
-    "w-full mt-2 mx-auto relative flex h-10  items-center gap-2 rounded-2xl bg-white/5 pl-2 pr-3 text-xs text-zinc-500 ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 ui-not-focus-visible:outline-none cursor-not-allowed z-[2]";
+    "w-full mt-2 mx-auto relative flex h-10  items-center gap-2 rounded-2xl bg-white/5 pl-2 pr-3 text-xs text-zinc-500 ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 ui-not-focus-visible:outline-none cursor-not-allowed z-[2] pointer-events-none";
   if (profilePresent) {
     buttonCls =
       " w-full mt-2 mx-auto relative flex h-10  items-center gap-2 rounded-md bg-white/5 pl-2 pr-3 text-xs  ring-1  transition  ui-not-focus-visible:outline-none  text-zinc-400 ring-inset ring-white/10 hover:ring-white/20 z-[2]";

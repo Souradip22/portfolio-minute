@@ -30,7 +30,6 @@ export async function generateMetadata({
   let title = profileData?.fullName || domain;
   const description = profileData?.bio;
   title += " | Portfolio Minute";
-  console.log(title);
   return {
     title,
     description,
@@ -65,7 +64,7 @@ export default async function SiteHomePage({
 
   if (!data) {
     // notFound();
-    redirect("https://specialtechnique.in");
+    redirect("https://portfoliominute.in");
   }
   const shortname = profile?.shortname || "";
   const fullName = profile?.fullName;
@@ -125,7 +124,7 @@ export default async function SiteHomePage({
             <div className="flex flex-col-reverse items-start  lg:flex-row justify-between">
               <div className="">
                 <h2 className="text-3xl font-semibold text-dark dark:text-gray-200 lg:text-[40px]">
-                  Hi This is{" "}
+                  Hi, This is{" "}
                   <span className={`${themeProps.textColorMedium}`}>
                     {fullName}
                   </span>{" "}
