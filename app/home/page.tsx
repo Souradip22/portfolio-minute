@@ -33,7 +33,7 @@ export default async function Home() {
               built by
               <a href="https://souradip.ch" target="_blank">
                 <span className="border-b border-amber-400 mx-1">souradip</span>
-                <FiExternalLink className=" inline-block" />
+                {/* <FiExternalLink className=" inline-block" /> */}
               </a>
             </p>
           </div>
@@ -54,41 +54,7 @@ export default async function Home() {
 
         <div className="pt-6 px-8 relative z-40 ">
           <div className="max-w-7xl mx-auto flex flex-col items-center">
-            <div className="z-50" style={{ opacity: "1" }}>
-              {/* <a
-              className="w-full flex items-center gap-2 mb-[40px] md:mb-[60px] group cursor-pointer md:border-none border border-solid border-[#eee2] p-1.5 rounded-full"
-              href="/cpp"
-            >
-              <div className="bg-teal-900 text-teal-300 px-2.5 py-0.5 rounded-full text-sm">
-                New
-              </div>
-              <div className="flex gap-1 items-center">
-                <div className="text-white text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 md:hidden block">
-                  Copilot++ Launch
-                </div>
-                <div className="text-white text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-100 md:block hidden">
-                  Copilot++ Launch: Next Edit Prediction
-                </div>
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                  className="text-white opacity-50"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-            </a> */}
-            </div>
+            <div className="z-50" style={{ opacity: "1" }}></div>
             <div className="z-50" style={{ opacity: 1 }}>
               <div>
                 <h1
