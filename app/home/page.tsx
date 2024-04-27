@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <>
-      <header className="z-[10000] max-w-screen top-0 left-0 center fixed h-20 w-screen   ">
+      <header className="z-[10000] max-w-screen top-0 left-0 center fixed h-16 w-screen   ">
         <div className="flex flex-col md:flex-row h-16  w-3/4 md:w-2/4 items-center justify-between px-6  my-2 relative z-[10000] rounded-full mx-auto border border-[#eee2]">
           <a
             href="/"
@@ -39,7 +39,7 @@ export default async function Home() {
           </div>
         </div>
       </header>
-      <div className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden h-screen">
+      <div className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden h-screen pt-4">
         <div className="w-full absolute inset-0 h-screen">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -68,17 +68,20 @@ export default async function Home() {
                   Craft Your Stunning Portfolio
                   <br /> in Just One Minute!
                 </h1>
-                <div className="text-center font-medium text-base md:text-lg text-[#FFFFFF]/[.48] mb-8">
-                  Create Your Online Portfolio Fast: Input Details, Get
-                  Subdomain, Share!{" "}
-                  <span className="opacity-1 shadow-md shadow-cyan-400">
-                    Edit Anytime!
+                <div className="text-center font-sm text-base md:text-lg text-[#FFFFFF]/[.48] mb-8 ">
+                  Get your portfolio ready in minutes: log in, customize, share!{" "}
+                  <span
+                    style={{
+                      boxShadow: "0 10px 10px -5px rgba(34, 211, 238, 1)",
+                    }}
+                  >
+                    always free and editable.
                   </span>
                   <br />
                 </div>
               </div>
               <div className="w-full">
-                <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-20 w-full relative z-40">
+                <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-16 w-full relative z-40">
                   {session ? (
                     <>
                       <Link
@@ -103,7 +106,7 @@ export default async function Home() {
               </div>
             </div>
             <div
-              className="user-select-none user-drag-none w-full opacity-100 relative "
+              className="user-select-none user-drag-none w-full opacity-100 relative"
               style={{ transform: "none" }}
             >
               <video
