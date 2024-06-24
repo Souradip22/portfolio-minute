@@ -28,18 +28,9 @@ export default async function Home() {
               Portfolio Minute
             </span>
           </a>
-          <div className="flex items-center space-x-8 z-[10000]">
-            <p className="text-gray-500 text-sm mt-0 sm:mt-1  mb-1">
-              built by
-              <a href="https://souradip.ch" target="_blank">
-                <span className="border-b border-amber-400 mx-1">souradip</span>
-                {/* <FiExternalLink className=" inline-block" /> */}
-              </a>
-            </p>
-          </div>
         </div>
       </header>
-      <div className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden h-screen pt-4">
+      <div className="relative w-full bg-black flex flex-col items-center pt-24  overflow-hidden h-screen ">
         <div className="w-full absolute inset-0 h-screen">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -70,18 +61,15 @@ export default async function Home() {
                 </h1>
                 <div className="text-center font-sm text-base md:text-lg text-[#FFFFFF]/[.48] mb-8 ">
                   Get your portfolio ready in minutes: log in, customize, share!{" "}
-                  <span
-                    style={{
-                      boxShadow: "0 10px 10px -5px rgba(34, 211, 238, 1)",
-                    }}
-                  >
+                  <span className="relative">
                     always free and editable.
+                    <span className="absolute bottom-0 inset-x-0 h-[6px] bg-cyan-500 opacity-50 hover:opacity-70"></span>
                   </span>
                   <br />
                 </div>
               </div>
               <div className="w-full">
-                <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-16 w-full relative z-40">
+                <div className="flex md:flex-row flex-col space-x-0 space-y-4 md:space-y-0 items-center justify-center md:space-x-4 pb-8 w-full relative z-40">
                   {session ? (
                     <>
                       <Link
@@ -113,7 +101,7 @@ export default async function Home() {
                 controls
                 autoPlay
                 width={600}
-                height={400}
+                height={380}
                 className="border-2 border-cyan-500 shadow-[0_10px_20px_rgba(46,_228,_240,_0.7)] rounded-md z-20 overflow-hidden border-zinc-600/40 ThreeD mx-auto"
               >
                 <source src="/intro.webm" type="video/webm" />

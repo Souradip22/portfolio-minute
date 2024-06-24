@@ -7,7 +7,7 @@ export const profileFormDefaultValues: Partial<TSProfileSchema> = {
   font: "font_1",
   shortname: "S Chandra",
   fullName: "Souradip Chandra",
-  bio: "Versatile full-stack engineer proficient in both front-end and back-end development, adept at crafting seamless and intuitive user experiences. 💻🎨",
+  bio: "I am a SWE at Grid Dynamics, where I work with Google Wifi team. Before Grid, I used to work with Dassault Systèmes as a Research & Development Engineer.  My passion lies in creating visually captivating interfaces, building robust tools, and refining user interactions to ensure they are both intuitive and delightful.",
   experience: "5",
   completedProjects: "10",
   isOpenToWork: true,

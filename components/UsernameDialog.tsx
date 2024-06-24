@@ -34,12 +34,6 @@ export function UsernameDialog({
         }}
         {...optionalProp}
       >
-        {/* <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
-          <DialogDescription>
-            Anyone who has this link will be able to view this.
-          </DialogDescription>
-        </DialogHeader> */}
         <UsernameForm setOpen={setOpen} setUsername={setUsername} />
       </DialogContent>
     </Dialog>

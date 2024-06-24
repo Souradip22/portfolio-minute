@@ -42,13 +42,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      // data-dark-mode={theme === "dark" ? "true" : "false"}
-    >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={` relative h-screen overflow-hidden bg-light text-dark dark:bg-dark-2 dark:text-light ${
+        className={`bg-white dark:bg-neutral-900 font-sans ${
           process.env.NODE_ENV == "development" ? "debug-screens" : ""
         }`}
       >

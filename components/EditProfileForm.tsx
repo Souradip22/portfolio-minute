@@ -52,20 +52,18 @@ const skillOptions: Option[] = filenames.map((filename) => ({
   label: filename
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" "), // Capitalize each word in the label
-  value: filename, // Use the filename as the value
+    .join(" "),
+  value: filename,
 }));
 
-//extract the TypeScript type that corresponds to the schema
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
-// This can come from your database or API.
 const defaultValues: Partial<TSProfileSchema> = profileFormDefaultValues;
 
 export default function EditProfileForm({
   profileDetails,
   username,
-  updateProfileDetails, // Add this prop
+  updateProfileDetails,
 }: {
   profileDetails: any;
   username?: string;
@@ -138,29 +136,6 @@ export default function EditProfileForm({
 
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
-    // if (formState.isDirty) {
-    //   const updatedProfileDetails = {
-    //     shortname: shortnameValue,
-    //     fullName: fullNameValue,
-    //     bio: bioValue,
-    //     phone: phoneValue,
-    //     userEmail: userEmailValue,
-    //     skills: skillsValue,
-    //     projects: projectsValue,
-    //     isOpenToWork: openToWorkValue,
-    //     experience: expValue,
-    //     completedProjects: completedProjectsValue,
-    //     educationWithExperiences: eduExpValues,
-    //     socialLinks: socialLinksValue,
-    //     theme: themeValue,
-    //     font: fontValue,
-    //     id: id,
-    //   };
-
-    //   // Call updateProfileDetails function with updated profile details
-    //   updateProfileDetails(updatedProfileDetails);
-    // }
-
     const updatedProfileDetails = {
       shortname: shortnameValue,
       fullName: fullNameValue,
