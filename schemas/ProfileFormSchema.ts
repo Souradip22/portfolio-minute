@@ -28,8 +28,8 @@ export const profileSchema = z.object({
     .min(10, {
       message: "Profile description must be at least 10 characters.",
     })
-    .max(200, {
-      message: "Profile description cannot be longer than 200 characters.",
+    .max(2000, {
+      message: "Profile description cannot be longer than 2000 characters.",
     }),
   experience: z.string().min(0).max(90).optional(),
   completedProjects: z.string().min(0).max(1000).optional(),

@@ -446,7 +446,7 @@ const MultipleSelector = React.forwardRef<
         </div>
         <div className="relative mt-2">
           {open && (
-            <CommandList className=" z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <CommandList className=" z-10 w-full rounded-md border bg-white text-neutral-900 shadow-md outline-none animate-in">
               {isLoading ? (
                 <>{loadingIndicator}</>
               ) : (

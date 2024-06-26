@@ -87,7 +87,10 @@ export function UsernameForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 text-neutral-900"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -97,9 +100,9 @@ export function UsernameForm({
               <FormControl>
                 <Input placeholder="username" {...field} autoComplete="off" />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-neutral-900">
                 Tips:
-                <ul className="ml-3 list-disc text-xs">
+                <ul className="ml-3 list-disc text-xs ">
                   <li>Use only lowercase letters (a-z).</li>
                   <li>Username must be 3 to 10 characters long.</li>
                   <li>

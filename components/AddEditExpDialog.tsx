@@ -15,9 +15,6 @@ import {
 } from "./ui/select";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
-
-import { Button } from "./ui/button";
 import { DialogHeader, DialogFooter, DialogTitle } from "./ui/dialog";
 import { MdEdit } from "react-icons/md";
 
@@ -64,7 +61,7 @@ export function AddEduExpDialog({
           </button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:text-neutral-900">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>
@@ -160,6 +157,12 @@ export function AddEduExpDialog({
             </div>
           </div>
           <DialogFooter className="flex justify-center gap-4">
+            <button
+              type="submit"
+              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
+            >
+              save
+            </button>
             <DialogClose asChild>
               <button
                 type="button"
@@ -168,12 +171,6 @@ export function AddEduExpDialog({
                 close
               </button>
             </DialogClose>
-            <button
-              type="submit"
-              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
-            >
-              save
-            </button>
           </DialogFooter>
         </form>
       </DialogContent>

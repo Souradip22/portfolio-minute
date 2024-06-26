@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Loader() {
   return (
-    <div className="flex flex-col gap-4 fixed top-0 right-0 bottom-0 left-0 bg-gray-800  z-100 items-center text-white h-screen justify-center ">
+    <div className="flex flex-col gap-4 fixed top-0 right-0 bottom-0 left-0 bg-neutral-800  z-100 items-center text-white h-screen justify-center ">
       <svg
         className="animate-spin h-8 w-8 text-white mr-4"
         xmlns="http://www.w3.org/2000/svg"
