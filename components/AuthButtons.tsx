@@ -9,7 +9,7 @@ import { LogOut } from "lucide-react";
 export function GoogleSignInButton() {
   const handleClick = () => {
     signIn("google", {
-      callbackUrl: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/dashboard`,
+      callbackUrl: `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/dashboard`,
     });
   };
 

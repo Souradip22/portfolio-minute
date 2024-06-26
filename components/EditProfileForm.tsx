@@ -199,7 +199,7 @@ export default function EditProfileForm({
           title: "❌  failed to update profile",
           description: error,
         });
-        // Handle errors during insertion
+
         console.error("Error creating profile:", error);
       }
     } else {
@@ -212,6 +212,7 @@ export default function EditProfileForm({
           body: JSON.stringify(data),
         });
         const createProfileResponse: any = await response.json();
+        console.log("RESPONse==> ", createProfileResponse);
         setLoading(false);
         if (createProfileResponse && createProfileResponse.error) {
           errorToast({

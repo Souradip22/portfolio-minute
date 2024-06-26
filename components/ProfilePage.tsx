@@ -35,7 +35,7 @@ export default function ProfilePage({
     theme,
     font,
   } = profileDetails || profileFormDefaultValues;
-  console.log("theme", theme);
+
   const bioLines = bio.split(/  /);
 
   const bgColor = `bg-${theme}-500`;

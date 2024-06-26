@@ -20,7 +20,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showIcons = true,
   theme,
 }) => {
-  console.log("project details", projectDetails);
   const { demoUrl, repositoryUrl, projectName, projectDescription } =
     projectDetails;
 

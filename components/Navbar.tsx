@@ -30,7 +30,7 @@ export const Navbar: FC<{ shortName: string; theme: string }> = ({
 
   const isActive = (path: string) =>
     path === "/" ? path === pathname : pathname.startsWith(path);
-  console.log("path", pathname);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
