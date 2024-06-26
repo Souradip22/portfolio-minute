@@ -1,24 +1,27 @@
+import { themes } from "@/lib/constants";
 import { z } from "zod";
 
 export const profileSchema = z.object({
   id: z.string().optional(),
   font: z.enum(["font_1", "font_2", "font_3"]).optional(),
-  theme: z.enum(["purple", "amber", "lime", "indigo", "pink"]).optional(),
+  //@ts-ignore
+  theme: z.enum(themes).optional(),
   shortname: z
     .string()
     .min(2, {
       message: "Short name must be at least 2 characters.",
     })
-    .max(10, {
+    .max(15, {
       message: "Short name must not be longer than 10 characters.",
-    }),
+    })
+    .optional(),
   fullName: z
     .string()
     .min(2, {
       message: "Full name must be at least 2 characters.",
     })
-    .max(20, {
-      message: "Full name must not be longer than 20 characters.",
+    .max(30, {
+      message: "Full name must not be longer than 30 characters.",
     }),
   bio: z
     .string()
@@ -31,10 +34,7 @@ export const profileSchema = z.object({
   experience: z.string().min(0).max(90).optional(),
   completedProjects: z.string().min(0).max(1000).optional(),
   isOpenToWork: z.boolean().default(true).optional(),
-  email: z
-    .string()
-    .email({ message: "Please enter a valid email." })
-    .optional(),
+  userEmail: z.string().optional(),
 
   phone: z
     .string()

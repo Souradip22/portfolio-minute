@@ -1,31 +1,7 @@
-import { NavItem } from "./types";
-import { FiHome } from "react-icons/fi";
+import { FiHome, FiTool, FiInfo, FiPhone } from "react-icons/fi";
 import { FaTools } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 import { MdInfo } from "react-icons/md";
-
-export const navItems: NavItem[] = [
-  {
-    label: "Home",
-    link: "#",
-    iconImage: FiHome,
-  },
-  {
-    label: "Skills",
-    link: "#",
-    iconImage: FaTools,
-  },
-  {
-    label: "Projects",
-    link: "#",
-    iconImage: AiOutlineProject,
-  },
-  {
-    label: "About",
-    link: "#",
-    iconImage: MdInfo,
-  },
-];
 
 export const skillNames: string[] = [
   "nodejs",
@@ -82,4 +58,12 @@ export const skillNames: string[] = [
   "aws",
   "google_cloud",
   "linux",
+];
+export const themes: string[] = [
+  "purple",
+  "amber",
+  "lime",
+  "indigo",
+  "pink",
+  "cyan",
 ];

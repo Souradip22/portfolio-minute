@@ -1,159 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 229.286, 0.935, 0.469;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+* {
+  min-width: 0;
+}
+@layer components {
+  .card-style {
+    @apply mx-auto  text-black font-light text-sm   h-40 w-40 rounded-xl bg-white dark:bg-neutral-800 flex items-center justify-center;
   }
 }
-
-/* @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
 
 html {
-  min-height: 100%;
-  background-image: url("../assets/pattern.svg"),
-    linear-gradient(to bottom, rgb(103 0 255 / 4%), transparent),
-    linear-gradient(to bottom left, rgb(255 0 201 / 2%), transparent);
-  background-size: 4px 4px, 100vw 200vh, 100vw 200vh;
-  background-repeat: repeat, no-repeat, no-repeat;
-  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
 }
 
-html.dark {
-  background: #160430;
-  background-image: url("../assets/pattern-dark.svg"),
-    linear-gradient(to bottom, rgb(103 0 255 / 15%), transparent),
-    linear-gradient(to bottom left, rgb(255 0 201 / 10%), transparent 50%);
-  background-size: 4px 4px, 100vw 200vh, 100vw 200vh;
-  background-repeat: repeat, no-repeat, no-repeat;
+body {
+  min-height: 100dvh;
 }
 
-.text-\[\#8991A7\] {
-  --tw-text-opacity: 1;
-  color: rgb(137 145 167 / var(--tw-text-opacity));
-}
-
-.text-blue-600 {
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
-}
-
-.text-dark {
-  --tw-text-opacity: 1;
-  color: rgb(26 31 44 / var(--tw-text-opacity));
-}
-
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
-}
-
-.text-light {
-  --tw-text-opacity: 1;
-  color: rgb(240 242 245 / var(--tw-text-opacity));
-}
-
-.text-muted {
-  --tw-text-opacity: 1;
-  color: rgb(87 96 118 / var(--tw-text-opacity));
-}
-
-.text-muted\/50 {
-  color: rgba(87, 96, 118, 0.5);
-}
-
-.text-primary {
-  --tw-text-opacity: 1;
-  color: rgb(71 112 255 / var(--tw-text-opacity));
-}
-
-.text-slate-600 {
-  --tw-text-opacity: 1;
-  color: rgb(71 85 105 / var(--tw-text-opacity));
-}
-
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.opacity-0 {
-  opacity: 0;
-}
-
-.opacity-75 {
-  opacity: 0.75;
-}
-
-.bg-dark-2 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(14 16 24 / var(--tw-bg-opacity));
+::selection {
+  @apply bg-primary-100 dark:bg-primary-900;
 }
 
 @keyframes scrollY {
@@ -209,24 +76,7 @@ html.dark {
 .animate-ping {
   animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
-/* 
-  .bg-primary {
-    background-color: blue;
-  } */
-/*  primary: "#4711de",
-        "ui-green": "#28c840",
-        "ui-red": "#ff5f57",
-        "ui-yellow": "#febc2e",
-        "ui-light": "#f8f2fb",
-        "gray-l": "#cbcbcb",
-        "gray-m": "#878787",
-        "gray-md": "#585a51",
-        "gray-d": "#414339",
-        text: "#333",
-        "text-d": "#333",
-        "purple-ll": "#f6f2ff",
-        "purple-l": "#ece3ff",
-        "purple-lm": "#deceff",
-        "purple-m": "#7335d7",
-        "purple-d": "#6500bf",
-        orange: "#fcaa5e", */
+
+.ThreeD {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-8deg) rotateZ(2deg);
+}

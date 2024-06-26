@@ -1,7 +1,6 @@
 "use client";
-import DomainPage from "@/app/domain/page";
+
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import FormSection from "./FormSection";
 import { profileFormDefaultValues } from "@/lib/defaultValues";
 import useSWR from "swr";
 import fetcher, { getProfile, getUser } from "@/lib/fetchers";
@@ -9,6 +8,11 @@ import { UsernameDialog } from "./UsernameDialog";
 import EditProfileForm from "./EditProfileForm";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { z } from "zod";
+import MenuBarMobile from "./layout/MenubarMobile";
+import Sidebar from "./layout/Sidebar";
+import ProfilePage from "./ProfilePage";
+import { errorToast } from "@/lib/customToasts";
+import Loader from "./Loader";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
@@ -19,16 +23,14 @@ export default function EditorSection() {
   const [profileDetails, setProfileDetails] = useState<TSProfileSchema | null>(
     null
   );
-
+  const [showSidebar, setShowSidebar] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userResponse = await getUser();
-        console.log("FETCH RESULT ARRIVED for Users");
         setUsername(userResponse?.username || "");
 
         const profileResponse = await getProfile();
-        console.log("FETCH RESULT ARRIVED for profile");
         if (!profileResponse) {
           setProfileDetails(null);
         } else {
@@ -41,43 +43,43 @@ export default function EditorSection() {
         console.error("Error fetching data:", error);
         setUsername("");
         setProfileDetails(null);
+        setMounted(true);
+        errorToast({
+          title: "❌  Error fetching data ",
+          description:
+            "something went wrong server side, please try again later",
+        });
       }
     };
 
     fetchData();
   }, []);
 
-  // Function to update form field values
-  // const updateFormValues = (newValues: any) => {
-  //   setProfileDetails({ ...profileDetails, ...newValues });
-  // };
   const updateProfileDetails = (newProfileDetails: any) => {
     setProfileDetails(newProfileDetails);
   };
 
   return (
-    <div className="flex flex-row">
+    <>
       {mounted ? (
-        <>
-          <DomainPage profileDetails={profileDetails} />
-          {/* <FormSection
-            formValues={formValues}
-            updateFormValues={updateFormValues}
-            username={username || userInfo?.username}
-          /> */}
-
-          <EditProfileForm
-            profileDetails={profileDetails}
-            username={username}
-            updateProfileDetails={updateProfileDetails} // Add this prop
-          />
-          {!username && (
-            <UsernameDialog isOpen={true} setUsername={setUsername} />
-          )}
-        </>
+        <ProfilePage profileDetails={profileDetails} />
       ) : (
-        <p>Loading</p>
+        // <div className="flex">
+        //   {/* <MenuBarMobile show={showSidebar} setter={setShowSidebar} />
+        //   <Sidebar show={showSidebar} setter={setShowSidebar}>
+        //     <EditProfileForm
+        //       profileDetails={profileDetails}
+        //       username={username}
+        //       updateProfileDetails={updateProfileDetails}
+        //     />
+        //   </Sidebar> */}
+        //   <ProfilePage profileDetails={profileDetails} />
+        //   {!username && (
+        //     <UsernameDialog isOpen={true} setUsername={setUsername} />
+        //   )}
+        // </div>
+        <Loader />
       )}
-    </div>
+    </>
   );
 }

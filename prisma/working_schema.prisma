@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
+  username      String?   @unique
+  gh_username   String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  site          Site?
+}
+
+model Profile {
+  id            String    @id @default(cuid())
+  userEmail     String?   
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  font                String?
+  theme               String?
+  shortname           String?
+  fullName            String?
+  bio                 String?
+  experience          String?
+  completedProjects   String?
+  isOpenToWork        Boolean?
+  phone               String?
+  skills              Skill[]
+  socialLinks         SocialLink[]
+  projects            Project[]
+  educationWithExperiences EducationWithExperience[]
+
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String    @unique
+
+  site          Site?
+
+  
+}
+model Site {
+  id            String   @id @default(cuid())
+  name          String?
+  description   String?  
+  subdomain     String?  @unique
+  message404    String?  @default("Blimey! You've found a page that doesn't exist.") 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        String?   @unique
+
+  profile       Profile?  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId     String?   @unique
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  refresh_token_expires_in Int?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  oauth_token_secret       String?
+  oauth_token              String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Define the Skill model
+model Skill {
+  id          String       @id @default(cuid())
+  label       String
+  value       String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+// Define the SocialLink model
+model SocialLink {
+  id          String       @id @default(cuid())
+  value       String
+  label       String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+// Define the Project model
+model Project {
+  id                String       @id @default(cuid())
+  projectName       String
+  projectDescription String
+  repositoryUrl     String
+  demoUrl           String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+// Define the EducationWithExperience model
+model EducationWithExperience {
+  id            String       @id @default(cuid())
+  orgName       String
+  fromDate      String
+  toDate        String
+  type          String
+  designation   String
+  location      String
+  profile        Profile?     @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+

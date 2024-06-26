@@ -12,15 +12,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
-import { toast } from "@/components/ui/use-toast";
-import { isUsernameTaken } from "@/lib/fetchers";
 
 const FormSchema = z.object({
   username: z
     .string()
     .min(3, {
       message: "Username must be at least 3 characters.",
+    })
+    .max(10, {
+      message: "Username must not be more than 10 characters.",
     })
     .regex(/^[a-z]+$/, {
       message: "Username must contain only lowercase letters (a-z).",
@@ -40,10 +40,15 @@ export function UsernameForm({
       username: "",
     },
   });
+
+  const { watch } = form;
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const inpUsername = watch("username");
 
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     setMessage("");
+    setLoading(true);
     const inpUsername = values?.username;
     const response = await fetch("/api/checkUsername", {
       method: "POST",
@@ -53,13 +58,10 @@ export function UsernameForm({
       body: JSON.stringify({ username: inpUsername }),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to check username availability");
-    }
-
     const availabilityResponse = await response.json();
     if (!availabilityResponse.available) {
       setMessage(availabilityResponse.message);
+      setLoading(false);
       return;
     }
 
@@ -71,13 +73,14 @@ export function UsernameForm({
         },
         body: JSON.stringify({ username: inpUsername }),
       });
-
+      setLoading(false);
       if (!insertResponse.ok) {
         throw new Error("Failed to insert username into the database");
       }
       setUsername(inpUsername);
       setOpen(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error inserting username:", error);
     }
   }
@@ -92,18 +95,58 @@ export function UsernameForm({
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="username" {...field} />
+                <Input placeholder="username" {...field} autoComplete="off" />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                Tips:
+                <ul className="ml-3 list-disc text-xs">
+                  <li>Use only lowercase letters (a-z).</li>
+                  <li>Username must be 3 to 10 characters long.</li>
+                  <li>
+                    Your profile will be visible at{" "}
+                    <code className="border-b border-amber-300">
+                      {inpUsername ? inpUsername : "<username>"}
+                      .portfoliominute.in
+                    </code>
+                    , so keep it short.
+                  </li>
+                  <li className="text-red-400">You cannot change this later</li>
+                </ul>
               </FormDescription>
               <FormMessage>{message}</FormMessage>
             </FormItem>
           )}
         />
-        <button className="px-3 py-2 bg-indigo-500 text-white" type="submit">
-          Submit
-        </button>
+        <div className="flex justify-end">
+          <button
+            className="flex gap-2 px-3 py-2 bg-gray-800 text-xs text-white rounded-md"
+            type="submit"
+          >
+            {loading && (
+              <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            )}
+            Submit
+          </button>
+        </div>
       </form>
     </Form>
   );

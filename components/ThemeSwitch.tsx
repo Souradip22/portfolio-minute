@@ -4,8 +4,9 @@ import { FiSun, FiMoon } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { Moon, Sun } from "lucide-react";
 
-export default function ThemeSwitch() {
+export default function ThemeSwitch({ text }: { text?: string }) {
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
 
@@ -24,21 +25,19 @@ export default function ThemeSwitch() {
       />
     );
 
-  if (resolvedTheme === "dark") {
-    return (
-      <FiSun
-        className="text-amber-500 w-4 h-4"
-        onClick={() => setTheme("light")}
-      />
-    );
-  }
+  const toggleTheme = () => {
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+  };
 
-  if (resolvedTheme === "light") {
-    return (
-      <FiMoon
-        className="text-gray-800 w-4 h-4"
-        onClick={() => setTheme("dark")}
-      />
-    );
-  }
+  return (
+    <span className=" py-2  cursor-pointer" onClick={toggleTheme}>
+      {resolvedTheme === "dark" ? (
+        <Sun className="text-amber-500 w-4 h-4" />
+      ) : (
+        <Moon className="text-gray-800 w-4 h-4" />
+      )}
+      {text && <span>{text}</span>}
+    </span>
+  );
 }

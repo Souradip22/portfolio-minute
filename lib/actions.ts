@@ -9,108 +9,13 @@ import { error } from "console";
 import { ProfileFormData } from "./interfaces";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { z } from "zod";
+import { subscribe } from "diagnostics_channel";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   7
-); // 7-character random string
-
-// export const createSite = async (formData: FormData) => {
-//   const session = await getSession();
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-//   const name = formData.get("name") as string;
-//   const description = formData.get("description") as string;
-//   const subdomain = formData.get("subdomain") as string;
-
-//   try {
-//     const response = await prisma.site.create({
-//       data: {
-//         name,
-//         description,
-//         subdomain,
-//         user: {
-//           connect: {
-//             id: session.user.id,
-//           },
-//         },
-//       },
-//     });
-//     await revalidateTag(
-//       `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-metadata`,
-//     );
-//     return response;
-//   } catch (error: any) {
-//     if (error.code === "P2002") {
-//       return {
-//         error: `This subdomain is already taken`,
-//       };
-//     } else {
-//       return {
-//         error: error.message,
-//       };
-//     }
-//   }
-// };
-
-// export const addUserName = async (formData: FormData) => {
-//   const session = await getSession();
-//   if (!session?.user.id) {
-//     return {
-//       error: "Not authenticated",
-//     };
-//   }
-//   const name = formData.get("name") as string;
-//   const description = formData.get("description") as string;
-//   const subdomain = formData.get("subdomain") as string;
-
-//   try {
-//     const response = await prisma.user.create({
-//       data: {
-//         name,
-//         subdomain,
-//         user: {
-//           connect: {
-//             id: session.user.id,
-//           },
-//         },
-//       },
-//     });
-//     await revalidateTag(
-//       `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-metadata`
-//     );
-//     return response;
-//   } catch (error: any) {
-//     if (error.code === "P2002") {
-//       return {
-//         error: `This subdomain is already taken`,
-//       };
-//     } else {
-//       return {
-//         error: error.message,
-//       };
-//     }
-//   }
-// };
-
-// async function callFetch() {
-//   const usersWithPosts = await prismaC.user.findUnique({
-//     where: {
-//       email: "alice@prisma.io",
-//     },
-//     include: {
-//       skills: true,
-//       socialLinks: true,
-//       projects: true,
-//       educationWithExperiences: true,
-//     },
-//   });
-//   console.dir(usersWithPosts, { depth: null });
-// }
+);
 
 export async function getUser(inpEmail: string) {
   try {
@@ -127,7 +32,6 @@ export async function getUser(inpEmail: string) {
       },
     });
 
-    console.dir(response, { depth: null });
     return response;
   } catch (error: any) {
     return {
@@ -136,25 +40,34 @@ export async function getUser(inpEmail: string) {
   }
 }
 
-export async function setUsername(inpUserEmail: string, inpUsername: string) {
-  const user = await prisma.user.update({
-    where: {
-      email: inpUserEmail,
-    },
-    data: {
-      username: inpUsername,
-    },
-  });
-
-  if (user) {
+export async function setUsername(inpUsername: string) {
+  const session = await getSession();
+  if (!session?.user.id) {
     return {
-      message: "Username updated",
+      error: "Not authenticated",
     };
   }
-
-  return {
-    message: "Username is unable to update",
-  };
+  try {
+    const userUpdate = await prisma.user.update({
+      where: {
+        email: session?.user.email,
+      },
+      data: {
+        username: inpUsername,
+      },
+    });
+    return userUpdate;
+  } catch (error: any) {
+    if (error.code === "P2002") {
+      return {
+        error: `This username is already taken`,
+      };
+    } else {
+      return {
+        error: error.message,
+      };
+    }
+  }
 }
 
 export async function getProfile(
@@ -183,60 +96,94 @@ export async function getProfile(
 
 export async function createProfile(
   userId: string,
-  formData: ProfileFormData
-): Promise<TSProfileSchema | { error: string } | null> {
+  formData: ProfileFormData,
+  subdomain: string
+): Promise<{ createdProfile: TSProfileSchema | null; error: string | null }> {
+  let createdProfile: TSProfileSchema | null = null;
+  const error: string | null = null;
+
   try {
     // Create the profile
-    const createdProfile = await prisma.profile.create({
-      data: {
-        font: formData.font,
-        theme: formData.theme,
-        shortname: formData.shortname,
-        fullName: formData.fullName,
-        bio: formData.bio,
-        experience: formData.experience,
-        completedProjects: formData.completedProjects,
-        isOpenToWork: formData.isOpenToWork,
-        email: formData.email,
-        phone: formData.phone,
-        skills: {
-          createMany: {
-            data: formData.skills,
+    await prisma.$transaction(async (tx) => {
+      //@ts-ignore
+      createdProfile = await tx.profile.create({
+        data: {
+          font: formData.font,
+          theme: formData.theme,
+          shortname: formData.shortname,
+          fullName: formData.fullName,
+          bio: formData.bio,
+          experience: formData.experience,
+          completedProjects: formData.completedProjects,
+          isOpenToWork: formData.isOpenToWork,
+          userEmail: formData.userEmail,
+          phone: formData.phone,
+          skills: {
+            createMany: {
+              data: formData.skills,
+            },
+          },
+          socialLinks: {
+            createMany: {
+              data: formData.socialLinks,
+            },
+          },
+          projects: {
+            createMany: {
+              data: formData.projects,
+            },
+          },
+          educationWithExperiences: {
+            createMany: {
+              data: formData.educationWithExperiences,
+            },
+          },
+          // Associate the profile with the specified user
+          user: {
+            connect: { id: userId },
           },
         },
-        socialLinks: {
-          createMany: {
-            data: formData.socialLinks,
+      });
+      const siteDetails = await tx.site.create({
+        data: {
+          description: "Site for " + formData.fullName,
+          subdomain: subdomain,
+          profile: {
+            connect: { id: createdProfile?.id },
+          },
+          user: {
+            connect: { id: userId },
           },
         },
-        projects: {
-          createMany: {
-            data: formData.projects,
-          },
-        },
-        educationWithExperiences: {
-          createMany: {
-            data: formData.educationWithExperiences,
-          },
-        },
-        // Associate the profile with the specified user
-        user: {
-          connect: { id: userId },
-        },
-      },
+      });
     });
-    return createdProfile as TSProfileSchema;
+    await revalidateTag(
+      `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-profile`
+    );
+    await revalidateTag(
+      `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-metadata`
+    );
   } catch (error: any) {
-    return {
-      error: error.message,
-    };
+    if (error.code === "P2002") {
+      return {
+        createdProfile,
+        error: `This subdomain is already taken`,
+      };
+    } else {
+      return {
+        createdProfile,
+        error: error.message,
+      };
+    }
   } finally {
     await prisma.$disconnect();
   }
+  return { createdProfile, error };
 }
 
 export async function updateProfile(
-  formData: ProfileFormData
+  formData: ProfileFormData,
+  subdomain?: string
 ): Promise<{ updatedProfile: TSProfileSchema | null; error: string | null }> {
   let updatedProfile: TSProfileSchema | null = null;
   const error: string | null = null;
@@ -284,7 +231,7 @@ export async function updateProfile(
           experience: formData.experience,
           completedProjects: formData.completedProjects,
           isOpenToWork: formData.isOpenToWork,
-          email: formData.email,
+          userEmail: formData.userEmail,
           phone: formData.phone,
           skills: {
             createMany: {
@@ -333,6 +280,15 @@ export async function updateProfile(
         },
       });
     });
+
+    if (subdomain) {
+      await revalidateTag(
+        `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-profile`
+      );
+      await revalidateTag(
+        `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}-metadata`
+      );
+    }
   } catch (error: any) {
     error = error.message;
   } finally {
