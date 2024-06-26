@@ -56,22 +56,40 @@ export default function ProfilePage({
                 >
                   {fullName?.charAt(0)}
                 </div>
-                <div className={`flex ${textColor} my-4 `}>
+                <div className={`flex ${textColor} my-2`}>
                   <SocialLinks socialLinks={socialLinks} theme={theme} />
                 </div>
-                <div>
+                <div className="my-1">
                   {openToWork && (
                     <div
-                      className={`flex items-center px-1 pr-3 py-1 rounded-full text-sm ${textColor} border ${borderColor}`}
+                      className={`flex items-center px-2 py-1 rounded-full text-xs ${textColor} border ${borderColor}`}
                     >
-                      <Dot className="animate-ping" />
+                      <Dot className="animate-ping" size={14} />
                       Open to Work
                     </div>
                   )}
                 </div>
+                <div className="my-1">
+                  {socialLinks?.map((item: any, index: any) => {
+                    return (
+                      item.value !== "" &&
+                      item.label == "resume" && (
+                        <LinkWrapper
+                          key={`${index}-resume`}
+                          className={` text-xs border border-dashed px-2 py-1 rounded ${borderColor} hover:${textColor}`}
+                          href={item.value}
+                        >
+                          View Resume 🚀
+                        </LinkWrapper>
+                      )
+                    );
+                  })}
+                </div>
               </div>
               <div className="flex flex-col text-center sm:text-left ">
-                <h2 className="font-bold text-xl">Hi 👋🏼</h2>
+                <h2 className="font-bold text-xl flex gap-1">
+                  Hi <span className="animate-waving-hand">👋🏻</span>,
+                </h2>
                 {bioLines.map((line: string, index: number) => (
                   <p key={index} className="pt-2">
                     {line}

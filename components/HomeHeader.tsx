@@ -38,10 +38,12 @@ export default function HomeHeader() {
       <span className="absolute md:top-[30%] md:left-[30%] dark:bg-green-600 blur-[150px] size-[150px] top-[50%] left-[50%] bg-green-400"></span>
       <section className="mx-auto flex max-w-4xl flex-col gap-2 pt-12 px-8 relative text-neutral-100 justify-center">
         <h1 className="md:text-[4rem] text-[2rem] font-bold  text-3xl md:text-6xl   mx-auto">
-          Create. Share. Shine
+          Create. Share.
+          <mark className="px-2 text-white bg-green-600 rounded">Shine.</mark>
         </h1>
         <div className="w-full flex-wrap my-2 text-center">
-          Build your online presence with portfolio minute. 3 steps -
+          Easily build your online presence with Portfolio Minute in three
+          simple steps: Sign in, enter your details, and create.
         </div>
       </section>
     </>
