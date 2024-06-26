@@ -19,10 +19,6 @@ body {
   min-height: 100dvh;
 }
 
-::selection {
-  @apply bg-primary-100 dark:bg-primary-900;
-}
-
 @keyframes scrollY {
   0% {
     transform: translateY(0);
@@ -77,6 +73,13 @@ body {
   animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.ThreeD {
-  transform: perspective(1000px) rotateX(2deg) rotateY(-8deg) rotateZ(2deg);
+.header-gradient {
+  background: radial-gradient(
+      circle farthest-corner at center center,
+      #83f45a,
+      #22c922
+    )
+    no-repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

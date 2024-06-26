@@ -1,6 +1,7 @@
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { socialLinksSVGs } from "./social-links";
-import SocialLinks from "./SocialLinks";
+import { LinkWrapper } from "./LinkWrapper";
 
 export default function EmojiAnimator() {
   const [emoji, setEmoji] = useState("😭");
@@ -24,7 +25,14 @@ export default function EmojiAnimator() {
         <span>
           {" "}
           Crafted with <span className="text-xs w-4 h-4">{emoji}</span> by{" "}
-          <strong>Souradip</strong>{" "}
+          <strong>
+            <LinkWrapper
+              href="https://portfoliominute.in"
+              className="flex items-center gap-1 not-prose text-neutral-400"
+            >
+              Portfolio Minute <ExternalLink size={14} />
+            </LinkWrapper>
+          </strong>{" "}
         </span>{" "}
       </span>
     </div>

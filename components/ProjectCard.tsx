@@ -12,20 +12,27 @@ interface ProjectCardProps {
     repositoryUrl?: string;
   };
   showIcons?: boolean;
+  theme?: string;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   projectDetails,
   showIcons = true,
+  theme,
 }) => {
+  console.log("project details", projectDetails);
   const { demoUrl, repositoryUrl, projectName, projectDescription } =
     projectDetails;
+
+  const textColor = `text-${theme}-500`;
 
   return (
     <article className="not-prose group p-4 relative border border-neutral-200 rounded-xl text-neutral-500 dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-400">
       {showIcons && (
         <>
-          <div className="absolute top-5 right-5 flex gap-3 items-center cursor-pointer text-primary-600">
+          <div
+            className={`absolute top-5 right-5 flex gap-3 items-center cursor-pointer ${textColor}`}
+          >
             {demoUrl && (
               <LinkWrapper href={demoUrl}>
                 <ExternalLink className="w-4 h-4 hover:scale-110" />
@@ -37,7 +44,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </LinkWrapper>
             )}
           </div>
-          <div className="flex w-11 h-11 justify-center items-center rounded-xl border font-bold text-xl shadow-sm border-neutral-100 dark:bg-neutral-900 dark:border-neutral-900 text-primary-600">
+          <div
+            className={`flex w-11 h-11 justify-center items-center rounded-xl border font-bold text-xl shadow-sm border-neutral-100 dark:bg-neutral-900 dark:border-neutral-900 ${textColor}`}
+          >
             {projectName.charAt(0).toLocaleUpperCase()}
           </div>
         </>

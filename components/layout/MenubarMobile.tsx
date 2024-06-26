@@ -9,7 +9,7 @@ export default function MenuBarMobile({
 }) {
   return (
     <button
-      className="md:hidden fixed bottom-[100px] left-2  shadow-2xl text-xl flex text-white rounded-xl bg-cyan-500 z-50 p-4"
+      className="md:hidden fixed bottom-[100px] left-2  shadow-2xl text-xl flex text-white rounded-xl bg-cyan-500 z-[99] p-4"
       onClick={() => {
         setter((oldVal: any) => !oldVal);
       }}

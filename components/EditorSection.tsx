@@ -1,9 +1,6 @@
 "use client";
-
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { profileFormDefaultValues } from "@/lib/defaultValues";
-import useSWR from "swr";
-import fetcher, { getProfile, getUser } from "@/lib/fetchers";
+import React, { useEffect, useState } from "react";
+import { getProfile, getUser } from "@/lib/fetchers";
 import { UsernameDialog } from "./UsernameDialog";
 import EditProfileForm from "./EditProfileForm";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
@@ -62,22 +59,29 @@ export default function EditorSection() {
   return (
     <>
       {mounted ? (
-        <ProfilePage profileDetails={profileDetails} />
+        <div className="flex">
+          <div className="overflow-y-auto sm:w-1/3 ">
+            <div className="h-screen">
+              <MenuBarMobile show={showSidebar} setter={setShowSidebar} />
+              <Sidebar show={showSidebar} setter={setShowSidebar}>
+                <EditProfileForm
+                  profileDetails={profileDetails}
+                  username={username}
+                  updateProfileDetails={updateProfileDetails}
+                />
+              </Sidebar>
+            </div>
+          </div>
+          <div className="relative overflow-y-auto  w-full sm:w-2/3">
+            <div className="h-screen">
+              <ProfilePage profileDetails={profileDetails} />
+            </div>
+          </div>
+          {!username && (
+            <UsernameDialog isOpen={true} setUsername={setUsername} />
+          )}
+        </div>
       ) : (
-        // <div className="flex">
-        //   {/* <MenuBarMobile show={showSidebar} setter={setShowSidebar} />
-        //   <Sidebar show={showSidebar} setter={setShowSidebar}>
-        //     <EditProfileForm
-        //       profileDetails={profileDetails}
-        //       username={username}
-        //       updateProfileDetails={updateProfileDetails}
-        //     />
-        //   </Sidebar> */}
-        //   <ProfilePage profileDetails={profileDetails} />
-        //   {!username && (
-        //     <UsernameDialog isOpen={true} setUsername={setUsername} />
-        //   )}
-        // </div>
         <Loader />
       )}
     </>

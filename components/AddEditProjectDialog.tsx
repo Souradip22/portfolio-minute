@@ -9,7 +9,6 @@ import {
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
-import { Button } from "./ui/button";
 import { DialogHeader, DialogFooter } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 
@@ -55,7 +54,7 @@ export function AddEditProjectDialog({
           </button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="dark:text-neutral-900">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>
@@ -103,6 +102,12 @@ export function AddEditProjectDialog({
             </div>
           </div>
           <DialogFooter className="flex justify-center gap-4">
+            <button
+              type="submit"
+              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
+            >
+              save
+            </button>
             <DialogClose asChild>
               <button
                 type="button"
@@ -111,12 +116,6 @@ export function AddEditProjectDialog({
                 close
               </button>
             </DialogClose>
-            <button
-              type="submit"
-              className="py-2 px-3 bg-stone-800 rounded-md text-sm text-gray-200  max-w-[200px]"
-            >
-              save
-            </button>
           </DialogFooter>
         </form>
       </DialogContent>

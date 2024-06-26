@@ -4,10 +4,7 @@ import { usePathname } from "next/navigation";
 import {
   BriefcaseBusinessIcon,
   HomeIcon,
-  LayersIcon,
   Menu,
-  MessagesSquareIcon,
-  Moon,
   NewspaperIcon,
   NotebookPenIcon,
   X,
@@ -15,7 +12,6 @@ import {
 import { LinkWrapper } from "./LinkWrapper";
 import { useState, type FC } from "react";
 import { cn } from "../lib/utils";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
 
@@ -26,7 +22,10 @@ const pages = [
   { name: "Skills", path: "#skills", icon: NewspaperIcon },
 ];
 
-export const Navbar: FC<{ shortName: string }> = ({ shortName }) => {
+export const Navbar: FC<{ shortName: string; theme: string }> = ({
+  shortName,
+  theme,
+}) => {
   const pathname = usePathname();
 
   const isActive = (path: string) =>
@@ -37,15 +36,27 @@ export const Navbar: FC<{ shortName: string }> = ({ shortName }) => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+  const textColor = `text-${theme}-500`;
 
   return (
     <nav
       className={cn(
-        "flex fixed w-11/12 sm:w-full max-w-[648px] top-6 left-1/2 transform -translate-x-1/2 justify-between items-center backdrop-blur-sm backdrop-filter text-sm py-3 pl-4 pr-3 rounded-[8px]",
-        "bg-neutral-100 dark:bg-neutral-800 z-50"
+        "flex absolute w-11/12 sm:w-full max-w-[648px] top-6 left-1/2 transform -translate-x-1/2 justify-between items-center backdrop-blur-sm backdrop-filter text-sm py-2 pl-4 pr-3 rounded-[8px]",
+        "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400  z-10"
       )}
     >
-      <div className="font-extrabold">{shortName}</div>
+      <h4 className="flex font-extrabold items-center text-lg">
+        {shortName}
+        <span className={`${textColor}`}>
+          <svg
+            className="w-2 h-2 mt-[7px]"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <circle cx="12" cy="12" r="10" />
+          </svg>
+        </span>
+      </h4>
       <button
         className="sm:hidden block"
         type="button"
@@ -62,9 +73,7 @@ export const Navbar: FC<{ shortName: string }> = ({ shortName }) => {
               href={link.path}
               className={cn(
                 "relative space-x-1",
-                isActive(link.path)
-                  ? "font-bold text-primary-500 "
-                  : "text-neutral-500 dark:text-neutral-400 "
+                isActive(link.path) ? `${textColor} font-bold` : ""
               )}
             >
               <span className="">{link.name}</span>
@@ -76,7 +85,7 @@ export const Navbar: FC<{ shortName: string }> = ({ shortName }) => {
 
       {isMobileMenuOpen && (
         <div className="sm:hidden absolute top-[86%] left-0 right-0 font-medium rounded-b-xl bg-neutral-100 dark:bg-neutral-800">
-          <div className="flex flex-col px-4 py-2 z-50">
+          <div className="flex flex-col px-4 py-2 z-10">
             <>
               {pages.map((link) => (
                 <LinkWrapper
@@ -85,9 +94,7 @@ export const Navbar: FC<{ shortName: string }> = ({ shortName }) => {
                   label={link.name}
                   className={cn(
                     " py-2",
-                    isActive(link.path)
-                      ? "font-bold text-primary-500 "
-                      : "text-neutral-500 dark:text-neutral-400 "
+                    isActive(link.path) ? `${textColor} font-bold` : ""
                   )}
                 >
                   <span className="">{link.name}</span>

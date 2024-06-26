@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`bg-white dark:bg-neutral-900 font-sans ${
+        className={`bg-white dark:bg-neutral-900 font-sans dark:text-neutral-100 ${
           process.env.NODE_ENV == "development" ? "debug-screens" : ""
         }`}
       >

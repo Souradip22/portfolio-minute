@@ -30,7 +30,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { IoClose } from "react-icons/io5";
 import { profileFormDefaultValues } from "@/lib/defaultValues";
 import { skillNames, themes } from "@/lib/constants";
 
@@ -39,12 +38,12 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import { profileSchema } from "@/schemas/ProfileFormSchema";
 import { AddEditProjectDialog } from "./AddEditProjectDialog";
 import { AddEduExpDialog } from "./AddEditExpDialog";
-import { getProfile } from "@/lib/fetchers";
 import SubdomainInfo from "./SubdomainInfo";
 import { SignOutButton } from "./AuthButtons";
 import { errorToast, successToast } from "@/lib/customToasts";
 import { MdClose, MdEdit } from "react-icons/md";
 import CustomButton from "./CustomButton";
+import { SquareArrowLeft } from "lucide-react";
 
 const filenames = skillNames;
 
@@ -153,8 +152,6 @@ export default function EditProfileForm({
       font: fontValue,
       id: id,
     };
-
-    // Call updateProfileDetails function with updated profile details
     updateProfileDetails(updatedProfileDetails);
   }, [
     shortnameValue,
@@ -174,6 +171,7 @@ export default function EditProfileForm({
   ]);
 
   async function onSubmit(data: TSProfileSchema) {
+    console.log("ONSUBMIT CALLED");
     setLoading(true);
     if (data.id) {
       try {
@@ -246,36 +244,11 @@ export default function EditProfileForm({
   }
 
   return (
-    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen pb-[300px]">
-      <div
-        className=" 
-        bg-amber-500 bg-purple-500 bg-lime-500 bg-indigo-500 bg-cyan-500 bg-pink-500
-    bg-amber-100 bg-amber-400 bg-amber-800
-    border-amber-100 border-amber-400 border-amber-800
-    text-amber-100 text-amber-400 text-amber-800
-    from-amber-600/0 via-amber-600/40 to-amber-600/0
-    bg-purple-100 bg-purple-400 bg-purple-800
-    border-purple-100 border-purple-400 border-purple-800
-    text-purple-100 text-purple-400 text-purple-800
-    from-purple-600/0 via-purple-600/40 to-purple-600/0
-    bg-lime-100 bg-lime-400 bg-lime-800
-    border-lime-100 border-lime-400 border-lime-800
-    text-lime-100 text-lime-400 text-lime-800
-    from-lime-600/0 via-lime-600/40 to-lime-600/0
-    bg-indigo-100 bg-indigo-400 bg-indigo-800
-    border-indigo-100 border-indigo-400 border-indigo-800
-    text-indigo-100 text-indigo-400 text-indigo-800
-    from-indigo-600/0 via-indigo-600/40 to-indigo-600/0
-    bg-pink-100 bg-pink-400 bg-pink-800
-    border-pink-100 border-pink-400 border-pink-800
-    text-pink-100 text-pink-400 text-pink-800
-    from-pink-600/0 via-pink-600/40 to-pink-600/0
-    bg-cyan-100 bg-cyan-400 bg-cyan-800
-    border-cyan-100 border-cyan-400 border-cyan-800
-    text-cyan-100 text-cyan-400 text-cyan-800
-    from-cyan-600/0 via-cyan-600/40 to-cyan-600/0"
-      ></div>
-      <div className="flex justify-end">
+    <div className="bg-stone-900 p-10 w-full overflow-y-auto h-screen pb-[300px] ">
+      <div className="flex justify-between items-center">
+        <a href="/" className="text-xs flex items-center gap-2 text-cyan-500">
+          <SquareArrowLeft size={18} /> Go back
+        </a>
         <SignOutButton />
       </div>
 
@@ -314,7 +287,7 @@ export default function EditProfileForm({
                       </FormLabel>
 
                       <FormControl>
-                        <div className="flex flex-row mt-2 gap-4">
+                        <div className="flex flex-wrap mt-2 gap-4">
                           {themes.map((color, index) => (
                             <label
                               key={index}
@@ -348,7 +321,7 @@ export default function EditProfileForm({
                   name="font"
                   render={({ field }) => (
                     <FormItem className="hidden">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Font
                       </FormLabel>
                       <Select
@@ -381,7 +354,7 @@ export default function EditProfileForm({
                   name="shortname"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Short name
                       </FormLabel>
                       <FormControl>
@@ -389,8 +362,7 @@ export default function EditProfileForm({
                       </FormControl>
                       <FormDescription>
                         <span className="text-red-500">*</span>Shortname will
-                        appear in the navbar as logo. Add space between
-                        characters for a color combination.
+                        appear in the navbar as logo.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -401,7 +373,7 @@ export default function EditProfileForm({
                   name="fullName"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Full name
                       </FormLabel>
                       <FormControl>
@@ -416,7 +388,7 @@ export default function EditProfileForm({
                   name="bio"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Bio
                       </FormLabel>
                       <FormControl>
@@ -426,7 +398,10 @@ export default function EditProfileForm({
                           {...field}
                         />
                       </FormControl>
-
+                      <FormDescription>
+                        <span className="text-red-500">*</span>Double space for
+                        new line
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -436,7 +411,7 @@ export default function EditProfileForm({
                   name="phone"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Phone
                       </FormLabel>
                       <FormControl>
@@ -451,7 +426,7 @@ export default function EditProfileForm({
                   name="userEmail"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Email
                       </FormLabel>
                       <FormControl>
@@ -466,7 +441,7 @@ export default function EditProfileForm({
                   name="experience"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Experience
                       </FormLabel>
                       <FormControl>
@@ -481,7 +456,7 @@ export default function EditProfileForm({
                   name="completedProjects"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                      <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                         Projects count
                       </FormLabel>
                       <FormControl>
@@ -498,7 +473,7 @@ export default function EditProfileForm({
                   control={form.control}
                   name="isOpenToWork"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 text-neutral-900">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -506,7 +481,7 @@ export default function EditProfileForm({
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="border-b border-dashed text-gray-500 border-amber-600 ">
+                        <FormLabel className="border-b border-dashed text-neutral-400 border-amber-600 ">
                           Show Available badge
                         </FormLabel>
                       </div>
@@ -529,7 +504,7 @@ export default function EditProfileForm({
                           <FormItem className="mb-4">
                             <FormControl>
                               <span className="flex items-center flex-row gap-2">
-                                <p className="h-6 w-6 mx-auto bg-gray-100 rounded-md p-1 flex items-center mr-2">
+                                <p className="h-6 w-6 mx-auto text-cyan-500  flex items-center mr-2">
                                   {socialLinksSVGs &&
                                     socialLinksSVGs[
                                       // @ts-ignore
@@ -685,7 +660,7 @@ export default function EditProfileForm({
             {profilePresent ? (
               <CustomButton title={"Update"} isLoading={isLoading} />
             ) : (
-              <CustomButton title={"Save"} isLoading={isLoading} />
+              <CustomButton title={"Create Profile"} isLoading={isLoading} />
             )}
           </div>
         </form>

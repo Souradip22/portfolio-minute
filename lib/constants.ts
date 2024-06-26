@@ -60,10 +60,27 @@ export const skillNames: string[] = [
   "linux",
 ];
 export const themes: string[] = [
-  "purple",
   "amber",
+  "emerald",
+  "red",
+  "purple",
   "lime",
   "indigo",
   "pink",
   "cyan",
+  "blue",
+  "violet",
 ];
+
+export const gradientColorMap: { [key: string]: string } = {
+  amber: " from-amber-600 to-pink-500",
+  emerald: " from-emerald-600 to-lime-500",
+  red: " from-red-600 to-amber-500",
+  purple: " from-purple-600 to-indigo-500",
+  lime: " from-lime-600 to-cyan-500",
+  indigo: " from-indigo-600 to-cyan-500",
+  pink: " from-pink-600 to-purple-500",
+  cyan: " from-cyan-600 to-emerald-500",
+  blue: " from-blue-600 to-cyan-500",
+  violet: " from-violet-600 to-pink-500",
+};

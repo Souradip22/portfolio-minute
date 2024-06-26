@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ExternalLink, Factory, Github, School } from "lucide-react";
+import { Factory, School } from "lucide-react";
 import React from "react";
 
 interface Experience {
@@ -15,18 +15,24 @@ interface Experience {
 
 interface ExperienceCardProps {
   expDetails: Experience;
+  theme: string;
 }
 
-const ExperienceCard: React.FC<ExperienceCardProps> = ({ expDetails }) => {
+const ExperienceCard: React.FC<ExperienceCardProps> = ({
+  expDetails,
+  theme,
+}) => {
   const { designation, fromDate, location, orgName, toDate, type } = expDetails;
+
+  const textColor = `text-${theme}-500`;
 
   return (
     <article className="not-prose group p-4 flex border items-center gap-4 border-neutral-200 rounded-xl text-neutral-500 dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-400">
       <div className="items-center">
         {type === "school" ? (
-          <School className="w-5 h-5 text-primary-500" />
+          <School className={`w-5 h-5 ${textColor}`} />
         ) : (
-          <Factory className="w-5 h-5 text-primary-500" />
+          <Factory className={`w-5 h-5 ${textColor}`} />
         )}
       </div>
       <div>
