@@ -30,7 +30,7 @@ export default async function Home() {
         </div>
         <div className="user-select-none user-drag-none my-12 border-1 mx-auto border-green-500 rounded-md shadow-[0_0_5px_rgb(34,197,92),_0_0_10px_rgb(21,128,61)]">
           <video controls autoPlay className="rounded-md">
-            <source src="/intro.webm" type="video/webm" />
+            <source src="/main.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
