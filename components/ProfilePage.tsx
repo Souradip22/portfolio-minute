@@ -172,7 +172,7 @@ export default function ProfilePage({
           <section className="my-5" id="skills">
             <SectionHeader title="Skills" theme={theme} />
             <div className="flex gap-3 flex-wrap">
-              {skills && <SkillsComponent skills={skills} />}
+              {skills && <SkillsComponent skills={skills} theme={theme} />}
             </div>
           </section>
 

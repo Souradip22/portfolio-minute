@@ -44,6 +44,7 @@ import { errorToast, successToast } from "@/lib/customToasts";
 import { MdClose, MdEdit } from "react-icons/md";
 import CustomButton from "./CustomButton";
 import { SquareArrowLeft } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const filenames = skillNames;
 
@@ -184,11 +185,13 @@ export default function EditProfileForm({
         const updatedProfileDetails: any = await response.json();
         setLoading(false);
         if (updatedProfileDetails && updatedProfileDetails.error) {
-          errorToast({
-            title: "❌  failed to update profile",
-            description: updatedProfileDetails.error,
-          });
-          throw new Error("Failed to update profile");
+          setTimeout(() => {
+            errorToast({
+              title: "❌  Profile update failed",
+              description: "Please sign in again to proceed",
+            });
+          }, 2000);
+          signOut();
         }
         successToast({
           title: "✅  Profile updated successfully",
@@ -213,11 +216,14 @@ export default function EditProfileForm({
         const createProfileResponse: any = await response.json();
         setLoading(false);
         if (createProfileResponse && createProfileResponse.error) {
-          errorToast({
-            title: "❌  Profile creation failed",
-            description: createProfileResponse.error,
-          });
-          throw new Error("Failed to create profile");
+          setTimeout(() => {
+            errorToast({
+              title: "❌  Profile creation failed",
+              description: "Please sign in again to proceed",
+            });
+          }, 2000);
+          signOut();
+          // throw new Error("Failed to create profile");
         }
 
         if (createProfileResponse && createProfileResponse.createdProfile) {
