@@ -87,7 +87,7 @@ export default function ProfilePage({
                 </div>
               </div>
               <div className="flex flex-col text-center sm:text-left ">
-                <h2 className="font-bold text-xl flex gap-1">
+                <h2 className="font-bold text-xl flex gap-1 mx-auto sm:mx-0">
                   Hi <span className="animate-waving-hand">👋🏻</span>,
                 </h2>
                 {bioLines.map((line: string, index: number) => (

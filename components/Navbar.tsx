@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import {
   BriefcaseBusinessIcon,
   HomeIcon,
@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { LinkWrapper } from "./LinkWrapper";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { cn } from "../lib/utils";
 import Link from "next/link";
 import ThemeSwitch from "./ThemeSwitch";
@@ -27,9 +27,18 @@ export const Navbar: FC<{ shortName: string; theme: string }> = ({
   theme,
 }) => {
   const pathname = usePathname();
+  const params = useParams();
+  const [anchor, setAnchor] = useState("#intro");
 
-  const isActive = (path: string) =>
-    path === "/" ? path === pathname : pathname.startsWith(path);
+  useEffect(() => {
+    setAnchor(window.location.hash == "" ? "#intro" : window.location.hash);
+  }, [params]);
+
+  const isActive = (path: string) => {
+    console.log(pathname, "path --> ", path, "anchor--> ", anchor);
+    const res = path === "/" ? path === anchor : anchor.startsWith(path);
+    return res;
+  };
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -88,17 +97,20 @@ export const Navbar: FC<{ shortName: string; theme: string }> = ({
           <div className="flex flex-col px-4 py-2 z-10">
             <>
               {pages.map((link) => (
-                <LinkWrapper
+                <Link
                   key={link.path}
                   href={link.path}
-                  label={link.name}
                   className={cn(
                     " py-2",
                     isActive(link.path) ? `${textColor} font-bold` : ""
                   )}
                 >
-                  <span className="">{link.name}</span>
-                </LinkWrapper>
+                  <span className="flex gap-1 items-center">
+                    {" "}
+                    <link.icon size={14} />
+                    {link.name}
+                  </span>
+                </Link>
               ))}
               <ThemeSwitch />
             </>
