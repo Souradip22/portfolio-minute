@@ -65,6 +65,9 @@ export function UsernameForm({
     if (!availabilityResponse.available) {
       setMessage(availabilityResponse.message);
       setLoading(false);
+      setTimeout(() => {
+        setMessage("");
+      }, 1000);
       return;
     }
 
