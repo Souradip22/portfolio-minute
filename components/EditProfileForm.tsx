@@ -171,7 +171,6 @@ export default function EditProfileForm({
   ]);
 
   async function onSubmit(data: TSProfileSchema) {
-    console.log("ONSUBMIT CALLED");
     setLoading(true);
     if (data.id) {
       try {
@@ -212,7 +211,6 @@ export default function EditProfileForm({
           body: JSON.stringify(data),
         });
         const createProfileResponse: any = await response.json();
-        console.log("RESPONse==> ", createProfileResponse);
         setLoading(false);
         if (createProfileResponse && createProfileResponse.error) {
           errorToast({

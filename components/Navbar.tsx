@@ -35,7 +35,6 @@ export const Navbar: FC<{ shortName: string; theme: string }> = ({
   }, [params]);
 
   const isActive = (path: string) => {
-    console.log(pathname, "path --> ", path, "anchor--> ", anchor);
     const res = path === "/" ? path === anchor : anchor.startsWith(path);
     return res;
   };

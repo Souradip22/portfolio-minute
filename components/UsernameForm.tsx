@@ -2,6 +2,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signOut } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -12,6 +13,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { errorToast, successToast } from "@/lib/customToasts";
+import { title } from "process";
 
 const FormSchema = z.object({
   username: z
@@ -73,10 +76,33 @@ export function UsernameForm({
         },
         body: JSON.stringify({ username: inpUsername }),
       });
-      setLoading(false);
+
       if (!insertResponse.ok) {
         throw new Error("Failed to insert username into the database");
       }
+
+      const result = await insertResponse.json();
+
+      if (result.error) {
+        //ToDo: Need to find a better approach
+        // This means user session has expired.
+        if (
+          result.error.includes(
+            "\nInvalid `prisma.user.update()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to update not found."
+          )
+        ) {
+          errorToast({
+            title: "Your session has expired.",
+            description:
+              "Please sign in again. You will be automatically signed out in next 2 sec.",
+          });
+
+          setTimeout(() => {
+            signOut();
+          }, 4000);
+        }
+      }
+      setLoading(false);
       setUsername(inpUsername);
       setOpen(false);
     } catch (error) {
@@ -116,7 +142,7 @@ export function UsernameForm({
                   <li className="text-red-400">You cannot change this later</li>
                 </ul>
               </FormDescription>
-              <FormMessage>{message}</FormMessage>
+              <FormMessage className="text-red-400">{message}</FormMessage>
             </FormItem>
           )}
         />

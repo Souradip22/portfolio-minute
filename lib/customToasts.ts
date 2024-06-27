@@ -6,6 +6,7 @@ export function successToast(params: any) {
     title: params.title ? params.title : "Action Success!",
     variant: "success",
     description: params.description ? params.description : "",
+
     // action: <ToastAction altText="Try again">Try again</ToastAction>,
   });
 }
@@ -17,6 +18,7 @@ export function errorToast(params: any) {
     description: params.description
       ? params.description
       : "Server is not able to handle this request, pls try again later",
+
     // action: <ToastAction altText="Try again">Try again</ToastAction>,
   });
 }
