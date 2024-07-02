@@ -88,13 +88,16 @@ export default function ProfilePage({
               </div>
               <div className="flex flex-col text-center sm:text-left ">
                 <h2 className="font-bold text-xl flex gap-1 mx-auto sm:mx-0">
-                  Hi <span className="animate-waving-hand">👋🏻</span>,
+                  Hi <span className="animate-waving-hand">👋🏻</span>, I am{" "}
+                  {fullName}
                 </h2>
-                {bioLines.map((line: string, index: number) => (
-                  <p key={index} className="pt-2">
-                    {line}
-                  </p>
-                ))}
+                <div className="text-justify">
+                  {bioLines.map((line: string, index: number) => (
+                    <p key={index} className="pt-2">
+                      {line}
+                    </p>
+                  ))}
+                </div>
                 <div className={`flex ${textColor} my-0 justify-center`}>
                   <DeviderSvg />
                 </div>

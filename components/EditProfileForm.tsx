@@ -576,11 +576,6 @@ export default function EditProfileForm({
             <AccordionItem value="educationWithExperiences">
               <AccordionTrigger>Education and experience</AccordionTrigger>
               <AccordionContent>
-                <p className="text-gray-400 mb-2 ml-1 text-xs">
-                  <span className="text-red-500">*</span>Arrange your experience
-                  and education in reverse chronological order to ensure they
-                  appear correctly in the UI.
-                </p>
                 <div>
                   {eduExpFields.map((field: any, index: number) => (
                     <div key={field.id}>
