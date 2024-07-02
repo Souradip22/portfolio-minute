@@ -102,7 +102,7 @@ export function UsernameForm({
 
           setTimeout(() => {
             signOut();
-          }, 4000);
+          }, 3000);
         }
       }
       setLoading(false);

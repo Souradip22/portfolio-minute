@@ -103,8 +103,8 @@ export const profileFormDefaultValues: Partial<TSProfileSchema> = {
       projectName: "shadcn/ui",
       projectDescription:
         "This is just an example/placeholder. I have used many components from here to make this website",
-      repositoryUrl: "https://shadcn.com",
-      demoUrl: "https://github.com/shadcn-ui/ui",
+      repositoryUrl: "https://github.com/shadcn-ui/ui",
+      demoUrl: "https://shadcn.com",
     },
     {
       projectName: "Vercel",

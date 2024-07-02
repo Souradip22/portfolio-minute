@@ -16,10 +16,14 @@ export async function generateMetadata({
   }
   let title = profileData?.fullName || domain;
   const description = profileData?.bio;
-  title += " | Portfolio Minute";
+  title += " | Portfolio";
   return {
     title,
     description,
+    openGraph: {
+      title: title,
+      description: description,
+    },
   };
 }
 export async function generateStaticParams() {

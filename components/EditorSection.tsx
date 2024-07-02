@@ -10,6 +10,7 @@ import Sidebar from "./layout/Sidebar";
 import ProfilePage from "./ProfilePage";
 import { errorToast } from "@/lib/customToasts";
 import Loader from "./Loader";
+import { signOut } from "next-auth/react";
 
 type TSProfileSchema = z.infer<typeof profileSchema>;
 
@@ -25,6 +26,16 @@ export default function EditorSection() {
     const fetchData = async () => {
       try {
         const userResponse = await getUser();
+        if (!userResponse) {
+          errorToast({
+            title: "Your session has expired.",
+            description:
+              "Please sign in again. You will be automatically signed out in next 2 sec.",
+          });
+          setTimeout(() => {
+            signOut();
+          }, 3000);
+        }
         setUsername(userResponse?.username || "");
 
         const profileResponse = await getProfile();
